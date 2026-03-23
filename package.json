@@ -1,14 +1,16 @@
 {
-  "name": "my-afnm-mod",
-  "version": "0.0.1",
+  "name": "afnm-tu-tien-mod",
+  "version": "1.0.0",
   "description": "A mod for AFNM",
   "author": {
-    "name": "<your name>"
+    "name": "XiaoTT"
   },
   "main": "dist/mod.js",
   "scripts": {
-    "build": "webpack --mode production",
-    "postbuild": "node scripts/zip-dist.js"
+  "build": "webpack --mode production",
+  "postbuild": "node scripts/zip-dist.js",
+  "deploy": "node scripts/deploy.js",
+  "ship": "npm run build && npm run deploy"
   },
   "devDependencies": {
     "afnm-types": "0.6.45-3",
