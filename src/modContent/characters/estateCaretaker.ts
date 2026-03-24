@@ -20,8 +20,8 @@ export const estateCaretaker: Character = {
     'Observatory Estate. He oversees supply procurement and maintains order ' +
     'across the grounds.',
   condition: '1', // always visible  
-  portrait: caretakerPortrait,
-  image: caretakerImage,
+  portrait: `${G}genericYoungGirlPortrait.webp`,
+  image: `${G}genericYoungGirl.webp`,
   definitions: [
     {
       kind: 'neutral',
@@ -45,7 +45,7 @@ export const estateCaretaker: Character = {
             {
               kind: 'speech',
               character: 'Estate Caretaker',
-              text: '"Welcome back, {forename}. The estate runs smoothly today. ' +
+              text: '"Welcome back, Young Lady {forename}. The estate runs smoothly today. ' +
                 'If you have supplies to deliver, bring them to me and I shall see you rewarded."',
             },
             {

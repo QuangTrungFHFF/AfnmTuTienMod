@@ -1,26 +1,64 @@
 // ─── Tu Tien Mod — Main Entry Point ──────────────────────────────────────────
-// Initialization order:
-//   transport seals → characters → locations (reference seals + characters)
-//     → techniques → items (shop listings)
+// Initialization order matters:
+//   1. story items         — no deps
+//   2. transport seals     — no deps
+//   3. characters          — depend on items being registered
+//   4. crypt location      — standalone, linked to Ancestral Barrows
+//   5. herb garden         — standalone estate
+//   6. observatory estate  — references characters by name
+//   7. techniques          — no deps on locations
+//   8. story quests        — registered before triggered events reference them
+//   9. story triggers      — reference items, locations, characters by name
+//  10. items (shop)        — references locations that must already exist
 
-import { initializeTransportSeals }     from './items/transportSeals';
-import { initializeEstateCaretaker }    from './characters/estateCaretaker';
-import { initializeHerbGardenEstate }   from './locations/herbGardenEstate';
-import { initializeObservatoryEstate }  from './locations/observatoryEstate';
-import { initializeFistTechniques }     from './techniques/fist';
+import { initializeTransportSeals } from './items/transportSeals';
+import { initializeStoryItems } from './items/storyItems';
+
+import { initializeEstateCaretaker } from './characters/estateCaretaker';
+import { initializeLinshu } from './characters/linshu';
+import { initializeAethericSentinel } from './characters/aethericSentinel';
+
+import { initializeCryptOfAethericChart } from './locations/cryptOfAethericChart';
+import { initializeHerbGardenEstate } from './locations/herbGardenEstate';
+import { initializeObservatoryEstate } from './locations/observatoryEstate';
+
+import { initializeFistTechniques } from './techniques/fist';
 import { initializeCraftingTechniques } from './techniques/crafting';
-import { initializeItems }              from './items/index';
+
+import { initializeStoryQuests } from './quests/storyQuests';
+import { initializeStoryTriggers } from './events/storyTriggers';
+
+import { initializeItems } from './items/index';
 
 function initializeMod(): void {
   console.log('🏯 Initializing Tu Tien Mod...');
 
-  initializeTransportSeals();     // 1. items with no deps
-  initializeEstateCaretaker();    // 2. characters (before locations reference them)
-  initializeHerbGardenEstate();   // 3. locations
-  initializeObservatoryEstate();  // 4. locations
-  initializeFistTechniques();     // 5. techniques
-  initializeCraftingTechniques(); // 6. techniques
-  initializeItems();              // 7. shop listings
+  // ── 1. Items (no dependencies) ────────────────────────────────────────────
+  initializeStoryItems();      // Bead, Sigil, Keystone, Ring, Linshu's Seal
+  initializeTransportSeals();  // Transport seals
+
+  // ── 2. Characters (before locations reference them) ───────────────────────
+  initializeEstateCaretaker(); // Supply quest acceptance NPC
+  initializeLinshu();          // Estate spirit / primary story NPC
+  initializeAethericSentinel(); // Crypt boss
+
+  // ── 3. Locations ──────────────────────────────────────────────────────────
+  initializeCryptOfAethericChart(); // Links to Ancestral Barrows
+  initializeHerbGardenEstate();
+  initializeObservatoryEstate();    // Modified: story-gated buildings
+
+  // ── 4. Techniques ─────────────────────────────────────────────────────────
+  initializeFistTechniques();     // Includes 'Twin Sovereigns' (unlocked via quest 3.4)
+  initializeCraftingTechniques();
+
+  // ── 5. Quests (registered before triggered events add them to log) ─────────
+  initializeStoryQuests(); // 9 side quests across chains 3–5
+
+  // ── 6. Triggered events ───────────────────────────────────────────────────
+  initializeStoryTriggers(); // Bead delivery, fever, third silence, veil lifts
+
+  // ── 7. Shop items (locations must be registered first) ────────────────────
+  initializeItems(); // Crafting technique action items + transport seals at shops
 
   console.log('✅ Tu Tien Mod loaded successfully!');
 }
