@@ -154,11 +154,15 @@ const aFeverInBlood: TriggeredEvent = {
 // construct" theme perfectly and avoids any hand-built EnemyEntity type errors.
 const thirdSilence: TriggeredEvent = {
   name: 'tuTien_thirdSilence',
+  // Fires on the world map when the player visits Ancestral Barrows.
+  // screens: ['map'] is used because the Barrows shows "Explore" not "Enter",
+  // so it has no location screen — 'location' would never fire there.
+  // Condition simplified: beadActivated is sufficient, item flag lookup for
+  // talisman items can be unreliable depending on equipped vs inventory state.
   trigger:
     'tuTien_beadActivated == 1 && ' +
-    'tuTien_cryptDiscovered == 0 && ' +
-    'Fractured_Azurite_Sigil >= 1',
-  screens: ['location'],
+    'tuTien_cryptDiscovered == 0',
+  screens: ['map'],
   locations: ['Ancestral Barrows'],
   event: {
     location: 'Ancestral Barrows',
@@ -204,83 +208,17 @@ const thirdSilence: TriggeredEvent = {
                 flag: 'tuTien_cryptDiscovered',
                 value: '1',
               },
-              // ── Sentinel encounter ────────────────────────────────────────
               {
                 kind: 'text',
                 text:
-                  'In the center of the chamber, a construct of ancient brass and blue crystal ' +
-                  'rotates to face you. Eye-lenses flood with light as long-dormant systems restart.',
+                  'Beyond the mercury threshold, cold blue light fills a vaulted chamber. ' +
+                  'Ancient formation diagrams cover every wall, breathing with a slow metallic hum. ' +
+                  'And in the center — something turns to face you.',
               },
-              {
-                kind: 'speech',
-                character: 'Aetheric Sentinel',
-                text:
-                  '"Scanning bio-signature... ' +
-                  'Analysis: Royal Azurite Blood detected. ' +
-                  'Purity: 0.001%. ' +
-                  'Status: Disgraceful. ' +
-                  'Trial of the Heavens initiated. ' +
-                  'Prove your right to the Archive, or become dust for the floor."',
-              },
-              {
-                kind: 'combat',
-                // "Automated Combatant" — meridianOpening Late, hard, long.
-                // monsters is EnemyEntity[] so use find(), not string index.
-                enemies: [window.modAPI.gameData.monsters.find(m => m.name === 'Automated Combatant')!],
-                victory: [
-                  {
-                    kind: 'speech',
-                    character: 'Aetheric Sentinel',
-                    text:
-                      '"Competence... accepted. ' +
-                      'Combat parameters: exceeded. ' +
-                      'The Keystone is yours. ' +
-                      'Do not... let the Star-Eaters find it again."',
-                  },
-                  {
-                    kind: 'text',
-                    text:
-                      'The construct collapses inward, ancient gears spilling across the stone floor. ' +
-                      'A compartment in its chest slides open. ' +
-                      'Inside, a prism of cold light hums with the rhythm of your own heartbeat.',
-                  },
-                  {
-                    kind: 'addItem',
-                    item: { name: 'Celestial Keystone' },
-                    amount: '1',
-                  },
-                  {
-                    kind: 'flag',
-                    global: true,
-                    flag: 'tuTien_sentinelDefeated',
-                    value: '1',
-                  },
-                  {
-                    kind: 'flag',
-                    global: true,
-                    flag: 'tuTien_keystoneObtained',
-                    value: '1',
-                  },
-                ],
-                defeat: [
-                  {
-                    kind: 'text',
-                    text:
-                      'The Sentinel lifts you with one brass hand and deposits you ' +
-                      'outside the crypt entrance as if discarding a failed test subject.',
-                  },
-                  {
-                    kind: 'speech',
-                    character: 'Aetheric Sentinel',
-                    text:
-                      '"Insufficient. Return when your cultivation matches your bloodline\'s ambition."',
-                  },
-                  { kind: 'exit' },
-                ],
-              },
+              // Fight is handled by clicking the Aetheric Sentinel NPC in the Crypt.
               {
                 kind: 'location',
-                location: 'Ancestral Barrows',
+                location: 'Crypt of the Aetheric Chart',
               },
             ],
           },
