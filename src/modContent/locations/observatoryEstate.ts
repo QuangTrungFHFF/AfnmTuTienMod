@@ -33,7 +33,7 @@ const observatoryEstate: GameLocation = {
   screenEffect: 'driftingLeaves',
   music: 'Lake',
   ambience: 'Space',
-  position: { x: 1567, y: -566 },
+  position: { x: 1567, y: -630 },
   size: 'large',
   reputationName: 'Observatory Estate',
   explorationCountOverride: 999,

@@ -27,9 +27,9 @@ export const cryptOfAethericChart: GameLocation = {
   screenEffect: 'mist',
   music: 'Crypt',
   ambience: 'Crypt',
-  // Approximate position — adjust after checking map coordinates
+  // Position: left of Crypt of the Fist (1587, -145), right of Xidian Outpost (1091, -213)
   // Ancestral Barrows is in the Shou Plains. Crypt sits just east of it.
-  position: { x: 320, y: -210 },
+  position: { x: 1370, y: -210 },
   size: 'small',
   reputationName: undefined,  
   unlocks: [],

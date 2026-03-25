@@ -178,10 +178,6 @@ export function initializeStoryItems(): void {
     buffs: buildingFuryBuff as any,
   };
 
-  if (!stoneGardenItem) {
-    console.warn("⚠️ Stone Garden Sigil S not found in gameData — Linshu's Seal will have no buff.");
-  }
-
   // ── Linshu's Seal chain — Quest 4.2 gives the starting Tier II ───────────
   // Stats mirror the Refined Talisman progression per realm tier.
   // Buff: Stone Garden Sigil S (weapon ↔ blossom qi conversion).

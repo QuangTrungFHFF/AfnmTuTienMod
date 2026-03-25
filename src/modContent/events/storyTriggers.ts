@@ -93,7 +93,7 @@ const aFeverInBlood: TriggeredEvent = {
           '(A faint, metallic echo reaches you — not from the air, but from your own blood.)\n\n' +
           '"The forge... is cold. ' +
           'The stars... are blind. ' +
-          'Return, Young {Master|Mistress}. ' +
+          'Return, Young {Master/Mistress}. ' +
           'Return to the Barrows of the Scribes."',
       },
       {
@@ -209,10 +209,16 @@ const thirdSilence: TriggeredEvent = {
                 value: '1',
               },
               {
-                kind: 'text',
-                text:
-                  'The Crypt of the Aetheric Chart is now visible on your map. ' +
-                  'Travel there to face what waits inside.',
+                // Teleport directly into the Crypt — no map-hunting required.
+                // updatePlayerLocation: true is required or this only flashes
+                // the background and snaps back.
+                // The sentinelEncounter TriggeredEvent fires immediately on
+                // arrival because its trigger is now satisfied:
+                //   tuTien_cryptDiscovered == 1 && tuTien_sentinelDefeated == 0
+                //   screens: ['map'], locations: ['Crypt of the Aetheric Chart']
+                kind: 'location',
+                location: 'Crypt of the Aetheric Chart',
+                updatePlayerLocation: true,
               },
             ],
           },
@@ -396,6 +402,12 @@ const veilLifts: TriggeredEvent = {
         flag: 'tuTien_estateUnlocked',
         value: '1',
       },
+      // Force Linshu's character placement to re-evaluate now that the flag is set.
+      // Without this, she may not appear at the estate until the next game load.
+      {
+        kind: 'updateCharacterDefinition',
+        character: 'Linshu',
+      },
       {
         kind: 'text',
         text:
@@ -425,7 +437,7 @@ const veilLifts: TriggeredEvent = {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
-                  '"Lucky? Silly Little {Brother|Sister}." ' +
+                  '"Lucky? Silly Little {Brother/Sister}." ' +
                   '(She reaches out to brush a stray hair from your face. Her hand passes through you like cold wind.) ' +
                   '"You think a mortal survives a direct lightning strike from a Fifth Elder because of \'luck\'?"',
               },
@@ -436,7 +448,7 @@ const veilLifts: TriggeredEvent = {
                   '"That bolt was meant to purify the world, but your blood is Azurite — ' +
                   'forged in the heart of falling stars. ' +
                   'When Tidao Feng\'s Blossom Qi hit you, it was like a spark hitting a mountain of dry tinder. ' +
-                  'The lightning didn\'t save you. It sang to you. It recognised its Young {Master|Mistress}."',
+                  'The lightning didn\'t save you. It sang to you. It recognised its Young {Master/Mistress}."',
               },
             ],
           },
@@ -469,17 +481,20 @@ const veilLifts: TriggeredEvent = {
         kind: 'speech',
         character: 'Linshu',
         text:
-          '"Look at me, Little {Brother|Sister}... I am fading. My light is almost spent. ' +
+          '"Look at me, Little {Brother/Sister}... I am fading. My light is almost spent. ' +
           'If I vanish, the formation collapses, and this entire valley — ' +
           'along with the history of our people — will be crushed by the weight of the outside world. ' +
           'You have the blood, but you lack the strength to anchor me yet. ' +
           'Come to the estate. Talk to me there."',
       },
       { kind: 'clearCharacter' },
-      // Move player to the estate
+      // Move player to the estate — updatePlayerLocation: true is required
+      // to actually move the player (without it, this is only a temporary
+      // context change that flashes the estate background then snaps back).
       {
         kind: 'location',
         location: 'Observatory Estate',
+        updatePlayerLocation: true,
       },
     ],
   },
