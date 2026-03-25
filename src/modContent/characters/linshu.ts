@@ -38,7 +38,7 @@ export const linshu: Character = {
   bio:
     'The spirit of the Observatory Estate, a consciousness bound to this place ' +
     'since the fall of the Azurite Empire. She calls herself your Senior Sister. ' +
-    'She has been waiting two thousand years for a Young Master to return.',
+    'She has been waiting two thousand years for a Young Master or Mistress to return.',
   condition: 'tuTien_estateUnlocked == 1',
   // DONE: Replace portrait and image with proper Linshu artwork.
   // She should appear semi-transparent/spectral in early chain 3,
@@ -75,13 +75,14 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Silly Little Brother... don\'t look so scared. ' +
+                '"Silly Little {Brother|Sister}... don\'t look so scared. ' +
                 'I\'m just a little... out of breath. ' +
                 'It turns out holding an entire estate in a fold of space ' +
                 'for a few centuries is quite tiring for a Spirit. ' +
                 'I need to anchor my form before I vanish. ' +
-                'Bring me some pills—the \'S\' kind from the Recuperation stock. ' +
-                'The Regeneration ones. They have enough kick to keep me awake."',
+                'Bring me some regeneration pills — Tier II. ' +
+                'They carry enough refined life-force to act as a temporary anchor. ' +
+                'Please... I\'ve waited so long to see you again. Don\'t let me disappear now."',
             },
             {
               kind: 'choice',
@@ -93,8 +94,8 @@ export const linshu: Character = {
                       kind: 'speech',
                       character: CHAR,
                       text:
-                        '"Ten of them. Tier II. ' +
-                        'Don\'t bring me anything weaker—I can smell diluted medicine ' +
+                        '"Five of them. Tier II. ' +
+                        'Don\'t bring me anything weaker — I can smell diluted medicine ' +
                         'from across the estate. Now go, before I fade."',
                     },
                     {
@@ -118,7 +119,7 @@ export const linshu: Character = {
                       text:
                         '"I am Linshu. The estate\'s spirit, your Senior Sister, ' +
                         'and the only reason this building still has walls. ' +
-                        'The important question is who YOU are—but we can discuss ' +
+                        'The important question is who YOU are — but we can discuss ' +
                         'your bloodline after I stop flickering. Pills first. Go."',
                     },
                   ],
@@ -130,14 +131,15 @@ export const linshu: Character = {
         },
 
         // ── STAGE 3.1: Waiting for pills ─────────────────────────────────────
+        // Accepts Regeneration Pill (II) OR Regeneration Pill S (II) — either counts
         {
-          condition: 'tuTien_q3_1_given == 1 && Regeneration_Pill_S__II_ < 10',
+          condition: 'tuTien_q3_1_given == 1 && Regeneration_Pill__II_ < 5 && Regeneration_Pill_S__II_ < 5',
           event: [
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"...Ten Regeneration Pill S (II). ' +
+                '"Five Regeneration Pills, Tier II. ' +
                 'I can see you don\'t have them yet. ' +
                 'I\'ll still be here, fading slightly. No rush."',
             },
@@ -147,8 +149,8 @@ export const linshu: Character = {
         // ── STAGE 3.1: Have the pills → delivery ─────────────────────────────
         // notifyCondition shows an indicator on the NPC when pills are ready
         {
-          condition: 'tuTien_q3_1_given == 1 && Regeneration_Pill_S__II_ >= 10',
-          notifyCondition: 'Regeneration_Pill_S__II_ >= 10',
+          condition: 'tuTien_q3_1_given == 1 && (Regeneration_Pill__II_ >= 5 || Regeneration_Pill_S__II_ >= 5)',
+          notifyCondition: 'Regeneration_Pill__II_ >= 5 || Regeneration_Pill_S__II_ >= 5',
           event: [
             {
               kind: 'setCharacter',
@@ -163,28 +165,30 @@ export const linshu: Character = {
             {
               kind: 'speech',
               character: CHAR,
-              text: '"...Oh. You actually brought them. Good Little Brother."',
+              text: '"...Oh. You actually brought them. Good Little {Brother|Sister}."',
             },
             {
               kind: 'removeItem',
-              item: { name: 'Regeneration Pill S (II)' },
-              amount: '10',
+              item: { name: 'Regeneration Pill (II)' },
+              alternates: [{ name: 'Regeneration Pill S (II)' }],
+              amount: '5',
             },
             {
               kind: 'text',
               text:
                 'She inhales the medicinal vapor deeply. ' +
                 'Her edges solidify — she flickers less. ' +
-                'Color returns to her translucent form.',
+                'A faint color returns to her cheeks.',
             },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Ah... much better. I can feel my feet touching the grass again. ' +
-                'Look at this garden, Little Brother — it\'s a mess of weeds. ' +
-                'Let me clear the overgrowth. I\'ll make it a place where ' +
-                'your spirit-herbs can actually breathe."',
+                '"Ah... much better. My feet actually feel the grass again. ' +
+                'Thank you, Little {Brother|Sister}. You\'re already more reliable than the old masters. ' +
+                'Look at this garden — it\'s a mess of silver-weeds and dead Qi. ' +
+                'Now that I can touch the world again, let me clear the overgrowth. ' +
+                'I\'ll make this a place where your spirit-herbs can finally breathe."',
             },
             {
               kind: 'flag',
@@ -262,8 +266,8 @@ export const linshu: Character = {
               character: CHAR,
               text:
                 '"There. Can you feel that? The house is starting to recognise its master. ' +
-                'You should stay here, Little Brother. ' +
-                'A Young Master shouldn\'t be sleeping in a commoner\'s hut at the Sect."',
+                'You should stay here, Little {Brother|Sister}. ' +
+                'A Young {Master|Mistress} shouldn\'t be sleeping in a commoner\'s hut at the Sect."',
             },
             {
               kind: 'flag',
@@ -447,7 +451,7 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"You\'ve done well, Little Brother. ' +
+                '"You\'ve done well, Little {Brother|Sister}. ' +
                 'The estate breathes again. Rest. Train. Reach the Third Gate. ' +
                 'There\'s more work ahead, but it can wait until you\'re stronger."',
             },
@@ -464,14 +468,37 @@ export const linshu: Character = {
               character: CHAR,
             },
             {
+              kind: 'text',
+              text:
+                'Linshu stands on the balcony, looking at the distant clouds. ' +
+                'Something in her expression is older than her face.',
+            },
+            {
               kind: 'speech',
               character: CHAR,
               text:
-                '"I need \'weight.\' Qi density. ' +
-                'Bring me Condensed Qi Elixirs—the Tier III kind. ' +
-                'If I consume enough, I can manipulate the clouds outside to carry you faster. ' +
-                'You want a faster mount, don\'t you? ' +
-                'Then stop staring at me and get to work!"',
+                '"Do you remember, Little {Brother|Sister}? When we were young, ' +
+                'our family didn\'t walk the earth like mortals. ' +
+                'We rode the currents of the stars. ' +
+                'Even the wind had to ask our permission to blow."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text:
+                '"I am anchored now, thanks to you, but I feel... light. ' +
+                'Like a leaf that might be blown away by a strong gale. ' +
+                'I want to help you travel safely through this dangerous world — ' +
+                'to be the wind beneath your wings again — but I lack the \'weight\' to manipulate the aether."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text:
+                '"Bring me Condensed Qi Elixirs — the Tier III kind. ' +
+                'If I consume their density, I can weave the surrounding starlight into your mount. ' +
+                'I don\'t want you riding those clumsy, slow clouds the Nine Mountain Sect provides. ' +
+                'A Young {Master|Mistress} of the Azurite line deserves better."',
             },
             {
               kind: 'quest',
@@ -489,20 +516,20 @@ export const linshu: Character = {
 
         // ── STAGE 4.1: Waiting for elixirs ───────────────────────────────────
         {
-          condition: 'tuTien_q4_1_given == 1 && Condensed_Qi_Elixir__III_ < 5',
+          condition: 'tuTien_q4_1_given == 1 && Condensed_Qi_Elixir__III_ < 10',
           event: [
             {
               kind: 'speech',
               character: CHAR,
-              text: '"Five Condensed Qi Elixir (III). The clouds won\'t weave themselves."',
+              text: '"Ten Condensed Qi Elixir (III). The clouds won\'t weave themselves."',
             },
           ],
         },
 
         // ── STAGE 4.1: Have elixirs → delivery + cloud reward ────────────────
         {
-          condition: 'tuTien_q4_1_given == 1 && Condensed_Qi_Elixir__III_ >= 5',
-          notifyCondition: 'Condensed_Qi_Elixir__III_ >= 5',
+          condition: 'tuTien_q4_1_given == 1 && Condensed_Qi_Elixir__III_ >= 10',
+          notifyCondition: 'Condensed_Qi_Elixir__III_ >= 10',
           event: [
             {
               kind: 'setCharacter',
@@ -511,22 +538,35 @@ export const linshu: Character = {
             {
               kind: 'removeItem',
               item: { name: 'Condensed Qi Elixir (III)' },
-              amount: '5',
+              amount: '10',
             },
             {
               kind: 'text',
               text:
-                'Linshu absorbs the elixirs into her form. For a moment she seems ' +
-                'more solid than air — almost real. She exhales starlight.',
+                'As Linshu consumes the elixirs, a shockwave of azure energy ripples ' +
+                'from her form. For a moment she seems more solid than air — almost real.',
             },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Mmm... so dense. I feel... solid. ' +
-                'Here — I\'ve woven some of the estate\'s starlight into a cloud for you. ' +
-                'The Azure Wisp. It recognises your bloodline. ' +
-                'It will move like a dream — and grow stronger as you do."',
+                '"Mmm... it feels like lead turning into gold in my veins. ' +
+                'Come here, Little {Brother|Sister}. Give me your travel-seal."',
+            },
+            {
+              kind: 'text',
+              text:
+                'Linshu takes your cloud-seal and begins to trace ancient runes upon it ' +
+                'with a shimmering finger. The cloud beneath your feet begins to pulse ' +
+                'with a rhythmic, heartbeat-like glow.',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text:
+                '"There. I\'ve woven a piece of the Estate\'s own foundation into your mount. ' +
+                'It won\'t just carry you — it will recognise the path before you even see it. ' +
+                'Go on... try not to go too fast and leave your soul behind!"',
             },
             {
               kind: 'addItem',
@@ -543,11 +583,21 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Little Brother... look at my face. It\'s still a bit \'blurry,\' isn\'t it? ' +
-                'There is a Jade Visage Pill from the Heavenly Mirror Lake. ' +
-                'If I take it, my spirit-body will become as permanent as flesh. ' +
-                'I\'ll finally be your \'real\' Senior Sister. ' +
-                'You wouldn\'t want me to remain a drawing forever, would you?"',
+                '"Little {Brother|Sister}... look at my face. It\'s still a bit \'blurry,\' isn\'t it? ' +
+                '(She is trying to pick up a real flower from the garden, but her fingers pass through the stem.) ' +
+                'It\'s... a bit lonely, isn\'t it? Being able to speak to you, ' +
+                'yet unable to even hold your hand or help you adjust your robes."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text:
+                '"I\'ve spent centuries as a thought, a memory of a Great Formation. ' +
+                'But now that you\'ve returned, I find myself wanting to be... real. ' +
+                'There is a pill spoken of in the old legends of the Heavenly Mirror Lake — the Jade Visage. ' +
+                'If I can consume it, my spirit-body will harmonize with the physical world. ' +
+                'I would be solid. I could walk beside you, not just drift behind you. ' +
+                'Would you find that for me? I wish to be your \'real\' Senior {Brother|Sister}, in flesh and spirit."',
             },
             {
               kind: 'quest',
@@ -594,20 +644,25 @@ export const linshu: Character = {
             {
               kind: 'text',
               text:
-                'Linshu takes the pill and holds it for a long moment, looking at it with ' +
-                'an expression you can\'t quite name. Then she swallows it. ' +
-                'The translucency that has defined her since the day you met — ' +
-                'the flickering edges, the cold glow — solidifies all at once. ' +
-                'She reaches out and touches your sleeve. You can feel it.',
+                'Linshu takes the pill and holds it for a long moment. ' +
+                'Then she swallows it. For a moment, the world goes silent. ' +
+                'Her form shimmers and becomes vivid — solid, real. ' +
+                'She tentatively reaches out and brushes your cheek. Her hand is warm.',
             },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"I... I can feel the wind on my skin. ' +
-                'Thank you. Truly. ' +
-                'I can hold more protective formations for the estate now. ' +
-                'Here — consider this a sisterly gift."',
+                '"I... I can feel you. The wind isn\'t just a sound anymore — it\'s a sensation. ' +
+                'Thank you. I feel a great weight lifted from my mind, ' +
+                'as if my true potential has finally been unlocked."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text:
+                '"Because my form is stable now, I can maintain much more complex ' +
+                'protective arrays for you. Let me share this — consider it a sisterly gift."',
             },
             {
               kind: 'addItem',
@@ -624,10 +679,21 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Now that I can think clearly, I\'m bored! ' +
-                'We need to rebuild the Archive. ' +
-                'Shimmering Copperite is the best conductor for memory-stones. ' +
-                'Bring me five. I\'ll pull the records from the aether and stock our shelves."',
+                '"Little {Brother|Sister}, now that I have my strength back, ' +
+                'the silence of this estate is starting to bother me. ' +
+                'Our family were Scribes. We didn\'t just cultivate — we recorded the secrets of the universe. ' +
+                'But look at our shelves — empty. Dust and shadows."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text:
+                '"I can feel the \'memory\' of our books drifting in the collective aether, ' +
+                'but I need a conductor to pull them back into reality. ' +
+                'Shimmering Copperite resonates with the frequency of stored knowledge. ' +
+                'Bring me five pieces, and I can rebuild our Archive. ' +
+                'I want to see you reading the true history of our people, ' +
+                'not the filtered lies of the current sects."',
             },
             {
               kind: 'quest',
@@ -672,17 +738,17 @@ export const linshu: Character = {
             {
               kind: 'text',
               text:
-                'Linshu presses the Shimmering Copperite into the estate\'s foundation pillars ' +
-                'with both hands. Lines of azure light spread outward like roots. ' +
-                'A door you hadn\'t noticed before swings open — behind it, shelves. Scrolls. ' +
-                'The ghost-whisper of preserved knowledge.',
+                'The empty library shelves begin to glow. One by one, spectral scrolls ' +
+                'and jade slips materialize, becoming solid as they touch the wood.',
             },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"The library is open! It\'s small, but it holds what was saved. ' +
-                'Come, let\'s get lost in the past together."',
+                '"It worked! It\'s only a fraction of what we once had, but it is a start. ' +
+                'The history of Linghe, the musings on Qi... it\'s all here. ' +
+                'Whenever the world outside becomes too loud, ' +
+                'come here and find peace in the words of our ancestors."',
             },
             {
               kind: 'flag',
@@ -714,7 +780,7 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"I\'m starting to remember her, Little Brother. Danxi. ' +
+                '"I\'m starting to remember her, Little {Brother|Sister}. Danxi. ' +
                 'My best friend — the Empire\'s Chief Alchemist. ' +
                 'But the method to rescue her requires a steady alchemist\'s hand. ' +
                 'Your craft skill isn\'t quite there yet. Train more, then come back."',
@@ -734,25 +800,35 @@ export const linshu: Character = {
             {
               kind: 'text',
               text:
-                'Something changes in Linshu\'s expression. Not the usual warmth — ' +
-                'something older. A memory surfacing from beneath two thousand years of waiting.',
+                'Linshu is looking at a scorched mark on the floor of the alchemy room. ' +
+                'Something in her expression is older than usual — not the warm Senior Sister, ' +
+                'but the woman who watched an empire fall.',
             },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"I remember her now... Danxi. ' +
-                'She was my best friend. The Empire\'s Chief Alchemist. ' +
-                'She was a genius, a terror, and she smelled perpetually of burnt sulphur. ' +
-                'When the beasts came and everything fell... she hid inside her spatial ring. ' +
-                'And then a King-Bird swallowed it."',
+                '"I was cleaning the furnaces today, and I remembered her. Danxi. ' +
+                'She was... difficult. Arrogant, loud, and she always complained ' +
+                'that my star-charts were \'distracting her from the flame.\' ' +
+                'But she was the greatest Alchemist the Empire ever saw."',
             },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"She\'s been trapped in a bird\'s stomach for two thousand years, Little Brother. ' +
-                'Go to the Jingdi Roost. Find the bird with the brightest stomach. Get her back."',
+                '"She didn\'t flee when the Jingdi Roost expanded. ' +
+                'She claimed the Beast-Kings produced the most consistent heat for her high-tier pills. ' +
+                'I saw her seal herself into her Bronze Ring just as the nest swallowed this wing of the estate."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text:
+                '"I\'ve felt a strange spatial distortion coming from the Jingdi Roost recently. ' +
+                'I think the ring is failing. If we don\'t get her out, she\'ll be crushed ' +
+                'by the collapsing dimensions. Please, Little {Brother|Sister}... ' +
+                'she\'s the only other one left who remembers your parents\' faces."',
             },
             {
               kind: 'quest',
@@ -795,12 +871,20 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"This ring is locked tight. ' +
-                'Danxi must be screaming in there. ' +
-                'The spatial rust on the seal is ancient — only a Storm Orb has enough ' +
-                'concentrated discharge to blast it free. ' +
-                'It\'s dangerous—one wrong move and she\'ll scatter into the void. ' +
-                'But I trust your hands."',
+                '"This ring is locked tight — I can hear her... ' +
+                'she\'s trying to refine the very void inside the ring just to stay alive. ' +
+                'The seal is rusted with spatial decay. ' +
+                'We have to break it from the outside, but it requires a massive burst of Cloud-energy ' +
+                'to \'lubricate\' the spatial gears."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text:
+                '"A Storm Orb is the only thing with enough raw atmospheric power. ' +
+                'Be careful, Little {Brother|Sister}. If your hands shake when you apply the energy, ' +
+                'the ring will shatter and Danxi will be lost forever. ' +
+                'But you... you have the blood of the Star-Gazers. Your precision is unmatched."',
             },
             {
               kind: 'quest',
@@ -859,33 +943,48 @@ export const linshu: Character = {
             {
               kind: 'text',
               text:
-                'Linshu holds the ring steady while you press the Storm Orb against the seal. ' +
-                'For a moment nothing happens. Then the Orb detonates — ' +
-                'a crack of thunder inside a closed room. Green smoke erupts. ' +
-                'Linshu stumbles backward. You stumble backward. ' +
-                'Out of the smoke steps a woman, coughing violently.',
+                'You crush the Storm Orb against the ring. A violent vortex of wind and green lightning erupts. ' +
+                'The ring shatters, and a cloud of thick, pungent smoke fills the room.',
             },
             {
               kind: 'speech',
               character: 'Danxi',
               text:
-                '"COUGH! HACK! Which idiot used a Storm Orb?! ' +
-                'You nearly blew my furnace to the Moon! ' +
-                'And you! (Points at Linshu) You\'ve put on weight! ' +
-                'And who is this brat? The new \'Master\'? ' +
-                'He looks like he couldn\'t refine a sugar cube!"',
+                '"COUGH! HACK! Which... (Cough)... absolute moron used a Storm Orb?! ' +
+                'I was right in the middle of a delicate stabilization! ' +
+                'You nearly turned my eyebrows into ash!"',
+            },
+            {
+              kind: 'text',
+              text:
+                'A tall, sharp-featured woman steps out of the smoke, waving a jade fan to clear the air. ' +
+                'She looks at Linshu, then at you, her eyes narrowing with intense scrutiny.',
+            },
+            {
+              kind: 'speech',
+              character: 'Danxi',
+              text:
+                '"Linshu? You\'ve... filled out. ' +
+                'And who is this brat? Why {is he|is she} wearing the Royal Seal? ' +
+                '{He looks|She looks} like {he\'s|she\'s} had three meals and zero hours of furnace-duty. ' +
+                'Is this the new \'Master\' of the house? ' +
+                '{He|She} can barely hold a Storm Orb without shaking!"',
             },
             {
               kind: 'speech',
               character: CHAR,
-              text: '"Welcome back, Danxi. Be nice. He\'s our Young Master."',
+              text:
+                '"(Giggling) {He|She} saved your life, you grumpy old furnace-clog. ' +
+                'Be nice. This is our Little {Brother|Sister} — the true heir to the Azurite line."',
             },
             {
               kind: 'speech',
               character: 'Danxi',
               text:
-                '"Hmph. We\'ll see. ' +
-                'Boy! If you want me to work, your cauldron better not be made of tin!"',
+                '"Hmph. Heir? We\'ll see. ' +
+                'If {he|she} wants me to refine anything better than a sugar cube, ' +
+                '{he\'d|she\'d} better find me a cauldron that isn\'t made of scrap metal. ' +
+                'Now, move aside! I need to see if my recipes survived that spatial trash-heap you call a ring!"',
             },
             {
               kind: 'flag',
@@ -917,7 +1016,7 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"The estate is in good shape today, Little Brother. ' +
+                '"The estate is in good shape today, Little {Brother|Sister}. ' +
                 'Is there something you needed?"',
             },
           ],

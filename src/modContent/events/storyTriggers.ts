@@ -93,7 +93,7 @@ const aFeverInBlood: TriggeredEvent = {
           '(A faint, metallic echo reaches you — not from the air, but from your own blood.)\n\n' +
           '"The forge... is cold. ' +
           'The stars... are blind. ' +
-          'Return, Young Master. ' +
+          'Return, Young {Master|Mistress}. ' +
           'Return to the Barrows of the Scribes."',
       },
       {
@@ -211,14 +211,8 @@ const thirdSilence: TriggeredEvent = {
               {
                 kind: 'text',
                 text:
-                  'Beyond the mercury threshold, cold blue light fills a vaulted chamber. ' +
-                  'Ancient formation diagrams cover every wall, breathing with a slow metallic hum. ' +
-                  'And in the center — something turns to face you.',
-              },
-              // Fight is handled by clicking the Aetheric Sentinel NPC in the Crypt.
-              {
-                kind: 'location',
-                location: 'Crypt of the Aetheric Chart',
+                  'The Crypt of the Aetheric Chart is now visible on your map. ' +
+                  'Travel there to face what waits inside.',
               },
             ],
           },
@@ -249,7 +243,107 @@ const thirdSilence: TriggeredEvent = {
   },
 };
 
-// ─── 4. The Veil Lifts ────────────────────────────────────────────────────────
+// ─── 4. Sentinel Encounter ────────────────────────────────────────────────────
+// Fires on the MAP at Crypt of the Aetheric Chart — exactly like thirdSilence
+// fires at Ancestral Barrows. The Crypt is an Explore-type location (no Enter
+// button / no location screen), so static NPCs never appear there. This
+// triggered event is the only reliable way to deliver the fight.
+// Fires exactly once: condition becomes false after sentinelDefeated == 1.
+const sentinelEncounter: TriggeredEvent = {
+  name: 'tuTien_sentinelEncounter',
+  trigger: 'tuTien_cryptDiscovered == 1 && tuTien_sentinelDefeated == 0',
+  screens: ['map'],
+  locations: ['Crypt of the Aetheric Chart'],
+  event: {
+    location: 'Crypt of the Aetheric Chart',
+    steps: [
+      {
+        kind: 'text',
+        text:
+          'Cold blue light fills the vaulted chamber. ' +
+          'Ancient formation diagrams cover every wall, breathing with a slow metallic hum. ' +
+          'And in the center — something turns to face you.',
+      },
+      {
+        kind: 'setCharacter',
+        character: 'Aetheric Sentinel',
+      },
+      {
+        kind: 'text',
+        text:
+          'The brass construct rotates, eye-lenses flooding with cold light ' +
+          'as long-dormant systems restart.',
+      },
+      {
+        kind: 'speech',
+        character: 'Aetheric Sentinel',
+        text:
+          '"Scanning bio-signature... ' +
+          'Analysis: Royal Azurite Blood detected. ' +
+          'Purity: 0.001%. ' +
+          'Status: Disgraceful. ' +
+          'Trial of the Heavens initiated. ' +
+          'Prove your right to the Archive, or become dust for the floor."',
+      },
+      {
+        kind: 'combat',
+        enemies: [window.modAPI.gameData.monsters.find(m => m.name === 'Automated Combatant')!],
+        victory: [
+          {
+            kind: 'speech',
+            character: 'Aetheric Sentinel',
+            text:
+              '"Competence... accepted. ' +
+              'Combat parameters: exceeded. ' +
+              'The Keystone is yours. ' +
+              'Do not... let the Star-Eaters find it again."',
+          },
+          {
+            kind: 'text',
+            text:
+              'The construct collapses inward, ancient gears spilling across the stone floor. ' +
+              'A compartment in its chest slides open. ' +
+              'Inside, a prism of cold light hums with the rhythm of your own heartbeat.',
+          },
+          {
+            kind: 'addItem',
+            item: { name: 'Celestial Keystone' },
+            amount: '1',
+          },
+          {
+            kind: 'flag',
+            global: true,
+            flag: 'tuTien_sentinelDefeated',
+            value: '1',
+          },
+          {
+            kind: 'flag',
+            global: true,
+            flag: 'tuTien_keystoneObtained',
+            value: '1',
+          },
+        ],
+        defeat: [
+          {
+            kind: 'setCharacter',
+            character: 'Aetheric Sentinel',
+          },
+          {
+            kind: 'speech',
+            character: 'Aetheric Sentinel',
+            text:
+              '"Insufficient. Return when your cultivation matches your bloodline\'s ambition."',
+          },
+          { kind: 'clearCharacter' },
+          { kind: 'exit' },
+        ],
+      },
+      { kind: 'clearCharacter' },
+    ],
+  },
+};
+
+// ─── 5. The Veil Lifts ────────────────────────────────────────────────────────
 // The estate unfolds. Fires at Falling Star Observatory once the Keystone
 // is obtained. The Keystone is consumed — it IS the estate's anchor pin,
 // and using it here "grounds" the pocket dimension into the real world.
@@ -317,55 +411,69 @@ const veilLifts: TriggeredEvent = {
         kind: 'speech',
         character: 'Linshu',
         text:
-          '"Oh! You\'re finally here. ' +
-          'I was starting to think I\'d have to wait another century. ' +
-          'You\'ve grown up... well, you\'ve grown \'at all,\' I suppose. ' +
-          'You were much smaller when the Empire fell."',
+          '"Look at you... you\'ve finally returned to us. ' +
+          'I used to carry you through these gardens when you were no larger than a flower-bud, ' +
+          'before the sky fell and we had to hide you among the commoners to keep you safe."',
       },
       {
         kind: 'choice',
         choices: [
           {
-            text: '"Who are you? What do you mean \'when I was smaller\'?"',
+            text: '"Who are you? You talk as if you know me — I grew up on a dirt farm. I\'m nobody."',
             children: [
               {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
-                  '"Silly Little Brother." ' +
-                  '(She pokes your forehead with a cold, spectral finger.) ' +
-                  '"You think a peasant survives a direct lightning strike from a Fifth Elder? ' +
-                  'That lightning didn\'t save you. It recognised you. ' +
-                  'Your bloodline did the rest."',
+                  '"Lucky? Silly Little {Brother|Sister}." ' +
+                  '(She reaches out to brush a stray hair from your face. Her hand passes through you like cold wind.) ' +
+                  '"You think a mortal survives a direct lightning strike from a Fifth Elder because of \'luck\'?"',
               },
               {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
-                  '"I am Linshu, your Senior Sister. ' +
-                  'Or your Caretaker, if you\'re going to be difficult. ' +
-                  'This is the family\'s Observatory Estate, and you have a lot of work to do. ' +
-                  'Look at me! I\'m fading! I need energy. ' +
-                  'Come back when you\'re ready to start."',
+                  '"That bolt was meant to purify the world, but your blood is Azurite — ' +
+                  'forged in the heart of falling stars. ' +
+                  'When Tidao Feng\'s Blossom Qi hit you, it was like a spark hitting a mountain of dry tinder. ' +
+                  'The lightning didn\'t save you. It sang to you. It recognised its Young {Master|Mistress}."',
               },
             ],
           },
           {
-            text: '"What needs to be done?"',
+            text: '"What is this place? It looks like a graveyard for machines."',
             children: [
               {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
-                  '"Straight to business. Good. ' +
-                  'I can work with that. ' +
-                  'Come to the estate and talk to me there — ' +
-                  'I can\'t hold this form much longer outside its walls. ' +
-                  'I\'ll explain everything when I\'m not flickering."',
+                  '"This is the Aetheric Chart House — the heart of our family\'s legacy. ' +
+                  'For two thousand years, we were the Star-Gazers, the ones who mapped the will of the Heavens. ' +
+                  'When the Empire fell, our last master folded this entire estate into a pocket of space ' +
+                  'to keep our secrets from the thieves and squatters who now call themselves \'Sects\'."',
               },
             ],
           },
         ],
+      },
+      {
+        kind: 'speech',
+        character: 'Linshu',
+        text:
+          '"I am Linshu — the spirit of this Estate\'s Great Formation. ' +
+          'But a formation cannot last forever without a master to feed it. ' +
+          'I have spent every drop of my essence keeping this place hidden ' +
+          'while you were \'sleeping\' in the world of mortals."',
+      },
+      {
+        kind: 'speech',
+        character: 'Linshu',
+        text:
+          '"Look at me, Little {Brother|Sister}... I am fading. My light is almost spent. ' +
+          'If I vanish, the formation collapses, and this entire valley — ' +
+          'along with the history of our people — will be crushed by the weight of the outside world. ' +
+          'You have the blood, but you lack the strength to anchor me yet. ' +
+          'Come to the estate. Talk to me there."',
       },
       { kind: 'clearCharacter' },
       // Move player to the estate
@@ -407,7 +515,8 @@ export function initializeStoryTriggers(): void {
   window.modAPI.actions.addTriggeredEvent(beadDelivery);
   window.modAPI.actions.addTriggeredEvent(aFeverInBlood);
   window.modAPI.actions.addTriggeredEvent(thirdSilence);
+  window.modAPI.actions.addTriggeredEvent(sentinelEncounter);
   window.modAPI.actions.addTriggeredEvent(veilLifts);
   // window.modAPI.actions.addTriggeredEvent(debugSkip); // Uncomment for testing
-  console.log('✅ Story triggered events registered: bead delivery, fever, third silence, veil lifts.');
+  console.log('✅ Story triggered events registered: bead delivery, fever, third silence, sentinel encounter, veil lifts.');
 }

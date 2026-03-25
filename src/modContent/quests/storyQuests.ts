@@ -11,20 +11,21 @@ export const q3_1_recovery: Quest = {
   displayName: 'A Place to Breathe',
   description:
     'Linshu needs medicinal support to anchor her spirit-form. ' +
-    'She has asked for ten Regeneration Pill S (II).',
+    'She has asked for five Regeneration Pills (II) or Regeneration Pill S (II).',
   category: 'side',
   steps: [
     {
       kind: 'collect',
-      hint: 'Gather Regeneration Pill S (II) for Linshu ({held}/10)',
-      item: 'Regeneration Pill S (II)',
-      amount: 10,
+      hint: 'Gather Regeneration Pills (II) for Linshu ({held}/5)',
+      item: 'Regeneration Pill (II)',
+      alternates: ['Regeneration Pill S (II)'],
+      amount: 5,
       // Bypass: quest completes when Linshu's delivery flag is set
       completionCondition: 'tuTien_q3_1_given == 2',
     },
   ],
   rewards: [
-    { kind: 'item', item: { name: 'Regeneration Pill S (II)' }, amount: 0 }, // No explicit reward — herb field unlock is the reward
+    { kind: 'item', item: { name: 'Regeneration Pill (II)' }, amount: 0 }, // No explicit reward — herb field unlock is the reward
   ],
 };
 
@@ -96,14 +97,14 @@ export const q4_1_soulWeight: Quest = {
   displayName: 'Weight of the Soul',
   description:
     'Linshu needs concentrated qi to solidify her form and enhance your cloud mount. ' +
-    'Bring her five Condensed Qi Elixir (III).',
+    'Bring her ten Condensed Qi Elixir (III).',
   category: 'side',
   steps: [
     {
       kind: 'collect',
-      hint: 'Gather Condensed Qi Elixir (III) for Linshu ({held}/5)',
+      hint: 'Gather Condensed Qi Elixir (III) for Linshu ({held}/10)',
       item: 'Condensed Qi Elixir (III)',
-      amount: 5,
+      amount: 10,
       completionCondition: 'tuTien_q4_1_given == 2',
     },
   ],
@@ -160,16 +161,58 @@ export const q5_1_roost: Quest = {
   displayName: 'The Alchemist\'s Echo',
   description:
     'Linshu has remembered her old friend Danxi — the Empire\'s Chief Alchemist, ' +
-    'trapped in a spatial ring that was swallowed by a Jingdi King-Bird. ' +
-    'Find the ring at the Jingdi Roost.',
+    'trapped in a spatial ring swallowed by the King-Beast at Jingdi Roost. ' +
+    'Defeat the beast and find the ring.',
   category: 'side',
   steps: [
     {
-      kind: 'collect',
-      hint: 'Find the Scratched Bronze Ring at Jingdi Roost',
-      item: 'Scratched Bronze Ring',
-      amount: 1,
+      kind: 'event',
+      hint: 'Defeat the Nuyao Spellsinger at Jingdi Roost',
       completionCondition: 'tuTien_q5_1_given == 2',
+      event: {
+        location: 'Jingdi Roost',
+        steps: [
+          {
+            kind: 'text',
+            text:
+              'Deep within the charred remains of the King-Beast\'s nest, ' +
+              'the air reeks of scorched feathers and ancient power. ' +
+              'The largest of the birds regards you with cold intelligence.',
+          },
+          {
+            kind: 'combat',
+            enemies: [
+              // Nuyao Spellsinger — qiCondensation Late, hard+ — correct tier for this quest
+              window.modAPI.gameData.monsters.find(m => m.name === 'Nuyao Spellsinger')!,
+            ],
+            victory: [
+              {
+                kind: 'text',
+                text:
+                  'The beast collapses. In the cooling remains of the nest, ' +
+                  'something catches your eye — a dull bronze ring, covered in scratches ' +
+                  'and spatial cracks, half-buried in the soot. ' +
+                  'It pulses with a faint, angry heat.',
+              },
+              {
+                kind: 'addItem',
+                item: { name: 'Scratched Bronze Ring' },
+                amount: '1',
+              },
+              // Note: tuTien_q5_1_given is set to 2 by Linshu's talkInteraction
+              // when the player brings the ring back. The quest log uses
+              // completionCondition: 'tuTien_q5_1_given == 2' as its bypass.
+            ],
+            defeat: [
+              {
+                kind: 'text',
+                text: 'The Nuyao Spellsinger stands over you. The ring is still in there, somewhere.',
+              },
+              { kind: 'exit' },
+            ],
+          },
+        ],
+      },
     },
   ],
   rewards: [],

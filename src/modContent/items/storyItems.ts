@@ -23,19 +23,6 @@ export const wornGlassBead = {
   realm: 'mundane' as const,
 };
 
-export const fracturedAzuriteSigil: TalismanItem = {
-  kind: 'talisman',
-  name: 'Fractured Azurite Sigil',
-  description:
-    'An ancient sigil bearing the fractured seal of the Azurite Empire. Though broken, it pulses with ' +
-    'cold blue light whenever you hold it. The needle etched into its face points, always, in one direction.',
-  icon: I('refinedTalismanIII.webp'),
-  stacks: 1,
-  rarity: 'empowered',
-  realm: 'bodyForging',
-  buffs: [],
-};
-
 export const celestialKeystone = {
   kind: 'token' as const,
   name: 'Celestial Keystone',
@@ -161,6 +148,35 @@ export function initializeStoryItems(): void {
   const gameItems = window.modAPI.gameData.items;
   const stoneGardenItem = gameItems['Stone Garden Sigil S'] as TalismanItem | undefined;
   const sealBuff = stoneGardenItem?.buffs ?? [];
+
+  if (!stoneGardenItem) {
+    console.warn("⚠️ Stone Garden Sigil S not found in gameData — Linshu's Seal will have no buff.");
+  }
+
+  // ── Fetch Building Fury Talisman+ (I) buff from native game data ─────────
+  // The Fractured Azurite Sigil inherits this buff so the player has a working
+  // talisman from the moment the bloodline awakens (bodyForging, empowered).
+  const buildingFuryItem = gameItems['Building Fury Talisman+ (I)'] as TalismanItem | undefined;
+  const buildingFuryBuff = buildingFuryItem?.buffs ?? [];
+
+  if (!buildingFuryItem) {
+    console.warn('⚠️ Building Fury Talisman+ (I) not found in gameData — Fractured Azurite Sigil will have no buff.');
+  }
+
+  // ── Fractured Azurite Sigil ───────────────────────────────────────────────
+  // Defined here (not at module level) so the buff can be fetched at runtime.
+  const fracturedAzuriteSigil: TalismanItem = {
+    kind: 'talisman',
+    name: 'Fractured Azurite Sigil',
+    description:
+      'An ancient sigil bearing the fractured seal of the Azurite Empire. Though broken, it pulses with ' +
+      'cold blue light whenever you hold it. The needle etched into its face points, always, in one direction.',
+    icon: I('refinedTalismanIII.webp'),
+    stacks: 1,
+    rarity: 'empowered',
+    realm: 'bodyForging',
+    buffs: buildingFuryBuff as any,
+  };
 
   if (!stoneGardenItem) {
     console.warn("⚠️ Stone Garden Sigil S not found in gameData — Linshu's Seal will have no buff.");
