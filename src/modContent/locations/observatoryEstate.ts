@@ -65,12 +65,14 @@ const observatoryEstate: GameLocation = {
     {
       kind: 'herbField',
       condition: 'tuTien_herbUnlocked == 1',
+      offset: { x: -500, y: 0 },
     },
 
     // ── Mine — unlocked by Quest 3.3 ─────────────────────────────────────────
     {
       kind: 'mine',
       condition: 'tuTien_mineUnlocked == 1',
+      offset: { x: 150, y: 0 },
     },
 
     // ── Library — unlocked by Quest 4.3 ──────────────────────────────────────

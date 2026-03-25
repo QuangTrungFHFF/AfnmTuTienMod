@@ -168,7 +168,10 @@ export const q5_1_roost: Quest = {
     {
       kind: 'event',
       hint: 'Defeat the Nuyao Spellsinger at Jingdi Roost',
-      completionCondition: 'tuTien_q5_1_given == 2',
+      // Complete as soon as the ring is in inventory — prevents the fight button
+      // from staying live and the boss from being farmed for multiple rings.
+      // (tuTien_q5_1_given == 2 only flips later when returning to Linshu.)
+      completionCondition: 'Scratched_Bronze_Ring >= 1',
       event: {
         location: 'Jingdi Roost',
         steps: [

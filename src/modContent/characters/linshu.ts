@@ -83,6 +83,7 @@ export const linshu: Character = {
         // ── STAGE 0: Estate just unlocked, Chain 3 not yet started ────────────
         {
           condition: 'tuTien_estateUnlocked == 1 && tuTien_q3_1_given == 0',
+          notifyCondition: 'tuTien_estateUnlocked == 1 && tuTien_q3_1_given == 0',
           event: [
             {
               kind: 'setCharacter',
@@ -219,12 +220,25 @@ export const linshu: Character = {
               flag: 'tuTien_q3_1_given',
               value: '2', // marks as delivered, not just given
             },
-            // Start next quest immediately
+            { kind: 'clearCharacter' },
+          ],
+        },
+
+        // ── BRIDGE 3.1→3.2: Next visit after herb field unlocked ─────────────
+        {
+          condition: 'tuTien_q3_1_given == 2 && tuTien_q3_2_given == 0',
+          notifyCondition: 'tuTien_q3_1_given == 2 && tuTien_q3_2_given == 0',
+          event: [
+            {
+              kind: 'setCharacter',
+              character: CHAR,
+            },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Now. The estate is still blind. ' +
+                '"Good — you can see the garden is already clearing. ' +
+                'But the estate is still blind. ' +
                 'The Aetheric Array in the ceiling is cracked. ' +
                 'We need something that fell from the sky but still thinks it\'s in the heavens. ' +
                 'Those Xing Kuilei carry shards of Living Meteor. Bring me three."',
@@ -298,12 +312,27 @@ export const linshu: Character = {
               flag: 'tuTien_q3_2_given',
               value: '2',
             },
+            { kind: 'clearCharacter' },
+          ],
+        },
+
+        // ── BRIDGE 3.2→3.3: Next visit after house unlocked ──────────────────
+        {
+          condition: 'tuTien_q3_2_given == 2 && tuTien_q3_3_given == 0',
+          notifyCondition: 'tuTien_q3_2_given == 2 && tuTien_q3_3_given == 0',
+          event: [
+            {
+              kind: 'setCharacter',
+              character: CHAR,
+            },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Deep beneath us, there are veins of ore that haven\'t \'vibrated\' ' +
-                'since the Empire fell. Resonating Silver acts as a tuning fork for the earth. ' +
+                '"I hope the house is comfortable. ' +
+                'But we\'re not done yet — deep beneath us, there are veins of ore ' +
+                'that haven\'t \'vibrated\' since the Empire fell. ' +
+                'Resonating Silver acts as a tuning fork for the earth. ' +
                 'If we plant enough of it in the lower levels, the mine will wake up. ' +
                 'Just don\'t blame me if the pickaxes start moving on their own."',
             },
@@ -374,11 +403,26 @@ export const linshu: Character = {
               flag: 'tuTien_q3_3_given',
               value: '2',
             },
+            { kind: 'clearCharacter' },
+          ],
+        },
+
+        // ── BRIDGE 3.3→3.4: Next visit after mine unlocked ───────────────────
+        {
+          condition: 'tuTien_q3_3_given == 2 && tuTien_q3_4_given == 0',
+          notifyCondition: 'tuTien_q3_3_given == 2 && tuTien_q3_4_given == 0',
+          event: [
+            {
+              kind: 'setCharacter',
+              character: CHAR,
+            },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"One last step. The lightning saved you, but it left you unbalanced. ' +
+                '"The mine is awake. I can hear it humming from up here. ' +
+                'But there is one last step — the lightning saved you, ' +
+                'but it left you unbalanced. ' +
                 'Burning Blood is the only thing hot enough to weld your Azurite lineage ' +
                 'to your Blossom-attuned soul. Are you ready for a little pain?"',
             },
@@ -596,6 +640,19 @@ export const linshu: Character = {
               flag: 'tuTien_q4_1_given',
               value: '2',
             },
+            { kind: 'clearCharacter' },
+          ],
+        },
+
+        // ── BRIDGE 4.1→4.2: Next visit after Azure Wisp reward ───────────────
+        {
+          condition: 'tuTien_q4_1_given == 2 && tuTien_q4_2_given == 0',
+          notifyCondition: 'tuTien_q4_1_given == 2 && tuTien_q4_2_given == 0',
+          event: [
+            {
+              kind: 'setCharacter',
+              character: CHAR,
+            },
             {
               kind: 'speech',
               character: CHAR,
@@ -692,11 +749,24 @@ export const linshu: Character = {
               flag: 'tuTien_q4_2_given',
               value: '2',
             },
+            { kind: 'clearCharacter' },
+          ],
+        },
+
+        // ── BRIDGE 4.2→4.3: Next visit after Linshu becomes solid ────────────
+        {
+          condition: 'tuTien_q4_2_given == 2 && tuTien_q4_3_given == 0',
+          notifyCondition: 'tuTien_q4_2_given == 2 && tuTien_q4_3_given == 0',
+          event: [
+            {
+              kind: 'setCharacter',
+              character: CHAR,
+            },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Little {Brother/Sister}, now that I have my strength back, ' +
+                '"Now that I have my strength back, ' +
                 'the silence of this estate is starting to bother me. ' +
                 'Our family were Scribes. We didn\'t just cultivate — we recorded the secrets of the universe. ' +
                 'But look at our shelves — empty. Dust and shadows."',
@@ -791,7 +861,7 @@ export const linshu: Character = {
 
         // ── STAGE: Chain 4 done, Chain 5 gate (crafting skill) ───────────────
         {
-          condition: 'tuTien_chain4Complete == 1 && tuTien_q5_1_given == 0 && craftSkill < 300',
+          condition: 'tuTien_chain4Complete == 1 && tuTien_q5_1_given == 0 && craftskill < 300',
           event: [
             {
               kind: 'speech',
@@ -807,8 +877,8 @@ export const linshu: Character = {
 
         // ── STAGE: Chain 4 done, crafting >= 300 → start Chain 5 ─────────────
         {
-          condition: 'tuTien_chain4Complete == 1 && tuTien_q5_1_given == 0 && craftSkill >= 300',
-          notifyCondition: 'tuTien_chain4Complete == 1 && craftSkill >= 300',
+          condition: 'tuTien_chain4Complete == 1 && tuTien_q5_1_given == 0 && craftskill >= 300',
+          notifyCondition: 'tuTien_chain4Complete == 1 && craftskill >= 300',
           event: [
             {
               kind: 'setCharacter',
@@ -964,9 +1034,11 @@ export const linshu: Character = {
                 'The ring shatters, and a cloud of thick, pungent smoke fills the room.',
             },
             {
-              kind: 'speech',
-              character: 'Danxi',
+              // Danxi is not yet a registered Character — use text step to avoid crash.
+              // Once Danxi.ts is built and registered, convert these back to speech steps.
+              kind: 'text',
               text:
+                'A voice erupts from inside the smoke: ' +
                 '"COUGH! HACK! Which... (Cough)... absolute moron used a Storm Orb?! ' +
                 'I was right in the middle of a delicate stabilization! ' +
                 'You nearly turned my eyebrows into ash!"',
@@ -978,9 +1050,9 @@ export const linshu: Character = {
                 'She looks at Linshu, then at you, her eyes narrowing with intense scrutiny.',
             },
             {
-              kind: 'speech',
-              character: 'Danxi',
+              kind: 'text',
               text:
+                'The woman surveys the room, fan still waving: ' +
                 '"Linshu? You\'ve... filled out. ' +
                 'And who is this brat? Why {is he/is she} wearing the Royal Seal? ' +
                 '{He looks/She looks} like {he\'s/she\'s} had three meals and zero hours of furnace-duty. ' +
@@ -995,9 +1067,9 @@ export const linshu: Character = {
                 'Be nice. This is our Little {Brother/Sister} — the true heir to the Azurite line."',
             },
             {
-              kind: 'speech',
-              character: 'Danxi',
+              kind: 'text',
               text:
+                'She waves you aside already heading for the alchemy room: ' +
                 '"Hmph. Heir? We\'ll see. ' +
                 'If {he/she} wants me to refine anything better than a sugar cube, ' +
                 '{he\'d/she\'d} better find me a cauldron that isn\'t made of scrap metal. ' +
