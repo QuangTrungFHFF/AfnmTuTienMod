@@ -21,6 +21,7 @@ import { initializeAethericSentinel } from './characters/aethericSentinel';
 import { initializeCryptOfAethericChart } from './locations/cryptOfAethericChart';
 import { initializeHerbGardenEstate } from './locations/herbGardenEstate';
 import { initializeObservatoryEstate } from './locations/observatoryEstate';
+import { initializeAethericUndercroft } from './locations/aethericUndercroft';
 
 import { initializeFistTechniques } from './techniques/fist';
 import { initializeCraftingTechniques } from './techniques/crafting';
@@ -46,6 +47,7 @@ function initializeMod(): void {
   initializeCryptOfAethericChart(); // Links to Ancestral Barrows
   initializeHerbGardenEstate();
   initializeObservatoryEstate();    // Modified: story-gated buildings
+  initializeAethericUndercroft();   // Mine sub-location, linked from estate
 
   // ── 4. Techniques ─────────────────────────────────────────────────────────
   initializeFistTechniques();     // Includes 'Twin Sovereigns' (unlocked via quest 3.4)

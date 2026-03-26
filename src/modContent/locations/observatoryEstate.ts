@@ -6,6 +6,7 @@ import roomIcon from '../../assets/locations/observatory-estate-room-bg.webp';
 import { observatoryEstateSeal } from '../items/transportSeals';
 import { buildSupplyQuests } from './observatoryEstateSupplyQuests';
 import { buildHuntQuests }   from './observatoryEstateHuntQuests';
+import { azuriteArchiveBuilding } from './observatoryEstateLibrary';
 
 // ─── Observatory Estate ───────────────────────────────────────────────────────
 // The hidden Azurite estate, revealed when the Celestial Keystone is used
@@ -65,45 +66,12 @@ const observatoryEstate: GameLocation = {
     {
       kind: 'herbField',
       condition: 'tuTien_herbUnlocked == 1',
-      offset: { x: -500, y: 0 },
     },
 
-    // ── Mine — unlocked by Quest 3.3 ─────────────────────────────────────────
-    {
-      kind: 'mine',
-      condition: 'tuTien_mineUnlocked == 1',
-      offset: { x: 150, y: 0 },
-    },
 
     // ── Library — unlocked by Quest 4.3 ──────────────────────────────────────
-    // The Archive holds lore books about the Azurite Empire and the Lost Ages.
-    // Books can be added here later to expand worldbuilding.
-    {
-      kind: 'library',
-      condition: 'tuTien_libraryUnlocked == 1',
-      title: 'The Azurite Archive',
-      categories: [
-        {
-          name: 'The Lost Empire',
-          condition: '1',
-          books: [
-            {
-              title: 'The Last Sentinel\'s Record',
-              author: 'Aetheric Sentinel Unit 01',
-              condition: 'tuTien_sentinelDefeated == 1',
-              contents:
-                'Trial parameters: Royal Azurite Blood confirmed. Purity: 0.001%. ' +
-                'Assessment: Bloodline dispersal consistent with civilian survival lineage. ' +
-                'Combat proficiency: satisfactory. Archive access: granted. ' +
-                'Note for the Archivist: The Star-Eaters have been probing the outer seal ' +
-                'for the last eight hundred years. This unit\'s integrity will not hold indefinitely. ' +
-                'It is recommended that the new heir fortify the estate\'s outer formations before ' +
-                'the next probe cycle.',
-            },
-          ],
-        },
-      ],
-    },
+    // Books and categories defined in observatoryEstateLibrary.ts
+    azuriteArchiveBuilding,
 
     // ── Market — always available (pre-existing estate infrastructure) ────────
     {
@@ -195,6 +163,7 @@ export function initializeObservatoryEstate(): void {
     distance: 3,
     condition: '1',
   });
+
 
   // ── Market items ───────────────────────────────────────────────────────────
   const add = (name: string, stacks: number, realm: Realm, valueModifier = 1.0): void => {
