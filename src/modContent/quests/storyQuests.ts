@@ -109,7 +109,7 @@ export const q4_1_soulWeight: Quest = {
     },
   ],
   rewards: [
-    { kind: 'item', item: { name: 'Azure Wisp' }, amount: 1 },
+    { kind: 'item', item: { name: 'Cerulean Sovereign' }, amount: 1 },
   ],
 };
 
@@ -227,7 +227,7 @@ export const q5_2_danxi: Quest = {
   description:
     'The spatial seal on Danxi\'s ring is ancient and rusted. ' +
     'Only a Storm Orb has enough discharge to break it safely. ' +
-    'Bring one to Linshu at the Observatory Estate.',
+    'Bring one to Linshu at the Azureline Sanctuary.',
   category: 'side',
   steps: [
     {

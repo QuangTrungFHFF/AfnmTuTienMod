@@ -1,21 +1,21 @@
 import { GameLocation } from 'afnm-types';
 import { G } from '../constants';
 
-// ─── Aetheric Undercroft ──────────────────────────────────────────────────────
-// The deep tunnels and ore veins beneath the Observatory Estate.
+// ─── Aetheric Veins ───────────────────────────────────────────────────────────
+// The deep tunnels and ore veins beneath the Azureline Sanctuary.
 // Awakened by Linshu in Quest 3.3 — the mine hums with resonant silver
 // and long-dormant earth qi. A short walk from the estate courtyard.
 //
 // Unlock: tuTien_mineUnlocked == 1 (set by Linshu's Quest 3.3 delivery)
-// Link:   Observatory Estate → Aetheric Undercroft (distance 1)
+// Link:   Azureline Sanctuary → Aetheric Veins (distance 1)
 //
 // Lore note: "Deep beneath us, there are veins of ore that haven't 'vibrated'
 // since the Empire fell. Resonating Silver acts as a tuning fork for the earth."
 
-export const aethericUndercroft: GameLocation = {
-  name: 'Aetheric Undercroft',
+export const aethericVeins: GameLocation = {
+  name: 'Aetheric Veins',
   description:
-    'Carved tunnels spiral deep beneath the Observatory Estate, their walls ' +
+    'Carved tunnels spiral deep beneath the Azureline Sanctuary, their walls ' +
     'threaded with veins of silver ore that hum at a frequency only cultivators can feel. ' +
     'The pickaxes here move on their own — exactly as Linshu warned.',
   // Using the Crypt background as a placeholder — both are ancient underground vaults.
@@ -26,7 +26,7 @@ export const aethericUndercroft: GameLocation = {
   screenEffect: 'dust',
   music: 'Crypt',
   ambience: 'Crypt',
-  // Positioned northwest of Observatory Estate (1567, -630)
+  // Positioned northwest of Azureline Sanctuary (1567, -630)
   // Close enough to feel like a sub-location of the estate grounds.
   position: { x: 1500, y: -800 },
   size: 'small',
@@ -35,7 +35,7 @@ export const aethericUndercroft: GameLocation = {
   unlocks: [],
   buildings: [
     // ── Mine — the whole reason this location exists ──────────────────────────
-    // Moved here from Observatory Estate because herbField and mine
+    // Moved here from Azureline Sanctuary because herbField and mine
     // auto-stack on top of each other and the offset property has no effect.
     {
       kind: 'mine',
@@ -44,25 +44,25 @@ export const aethericUndercroft: GameLocation = {
   ],
 };
 
-export function initializeAethericUndercroft(): void {
-  window.modAPI.actions.addLocation(aethericUndercroft);
+export function initializeAethericVeins(): void {
+  window.modAPI.actions.addLocation(aethericVeins);
 
-  // Both link directions live here so the estate→undercroft link only runs
-  // AFTER the undercroft has been registered (avoiding undefined location error).
+  // Both link directions live here so the sanctuary→veins link only runs
+  // AFTER the veins have been registered (avoiding undefined location error).
 
-  // Observatory Estate → Aetheric Undercroft (visible once mine is unlocked)
-  window.modAPI.actions.linkLocations('Observatory Estate', {
-    location: aethericUndercroft,
+  // Azureline Sanctuary → Aetheric Veins (visible once mine is unlocked)
+  window.modAPI.actions.linkLocations('Azureline Sanctuary', {
+    location: aethericVeins,
     distance: 1,
     condition: 'tuTien_mineUnlocked == 1',
   });
 
-  // Return link — always accessible once undercroft exists
-  window.modAPI.actions.linkLocations('Aetheric Undercroft', {
-    location: window.modAPI.gameData.locations['Observatory Estate'],
+  // Return link — always accessible once veins exist
+  window.modAPI.actions.linkLocations('Aetheric Veins', {
+    location: window.modAPI.gameData.locations['Azureline Sanctuary'],
     distance: 1,
     condition: '1',
   });
 
-  console.log('✅ Aetheric Undercroft registered.');
+  console.log('✅ Aetheric Veins registered.');
 }

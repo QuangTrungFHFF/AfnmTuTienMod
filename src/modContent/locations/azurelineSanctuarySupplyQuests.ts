@@ -1,6 +1,6 @@
 import { Quest, Realm, Rarity } from 'afnm-types';
 
-// ─── Observatory Estate — Supply Quests ───────────────────────────────────────
+// ─── Azureline Sanctuary — Supply Quests ───────────────────────────────────────
 // 10 quests per tier (I–V), each asking for empowered/resplendent combat pills
 // not sold in the estate market. Random board draws 3 at a time, cycling variety.
 //
@@ -95,9 +95,9 @@ function makeSupplyQuest(
     realm,
     rarity,
     quest: {
-      name: `observatoryEstate_supply_${realm}_${idx}`,
+      name: `azurelineSanctuary_supply_${realm}_${idx}`,
       displayName: `Estate Supply: ${entry.pill}`,
-      description: `The Observatory Estate requires ${entry.pill} for its cultivation operations. Gather some and deliver to the Estate Caretaker.`,
+      description: `The Azureline Sanctuary requires ${entry.pill} for its cultivation operations. Gather some and deliver to the Estate Caretaker.`,
       category: 'requestBoard',
       steps: [
         {
@@ -108,7 +108,7 @@ function makeSupplyQuest(
         },
         {
           kind: 'speakToCharacter',
-          hint: 'Deliver the pills to the Estate Caretaker at Observatory Estate.',
+          hint: 'Deliver the pills to the Estate Caretaker at Azureline Sanctuary.',
           character: NPC,
           event: [
             {
@@ -117,13 +117,13 @@ function makeSupplyQuest(
               text: `"${entry.pill} — exactly what we needed. The estate thanks you, {forename}."`,
             },
             { kind: 'removeItem', item: { name: entry.pill }, amount: String(entry.amount) },
-            { kind: 'reputation', amount: '1', name: 'Observatory Estate', max: 'exalted' } as any,
+            { kind: 'reputation', amount: '1', name: 'Azureline Sanctuary', max: 'exalted' } as any,
             { kind: 'money', amount: String(entry.money) },
           ],
         },
       ],
       rewards: [
-        { kind: 'reputation', amount: 1, name: 'Observatory Estate' },
+        { kind: 'reputation', amount: 1, name: 'Azureline Sanctuary' },
         { kind: 'money', amount: entry.money },
       ],
     },

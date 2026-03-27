@@ -1,6 +1,6 @@
 import { Quest, Realm, Rarity } from 'afnm-types';
 
-// ─── Observatory Estate — Hunt Quests ────────────────────────────────────────
+// ─── Azureline Sanctuary — Hunt Quests ────────────────────────────────────────
 // 10 hunt quests per realm tier (II–V).
 // All use real monster templates from window.modAPI.gameData.monsters.
 //
@@ -418,7 +418,7 @@ export function buildHuntQuests(): { quest: Quest; realm: Realm; rarity: Rarity 
     const found = Object.values(M).find(
       m => m.name === name && m.realm === realm && (!realmProgress || m.realmProgress === realmProgress)
     );
-    if (!found) console.warn(`⚠️ Observatory hunt: monster not found — "${name}" (${realm} ${realmProgress ?? ''})`);
+    if (!found) console.warn(`⚠️ Azureline Sanctuary hunt: monster not found — "${name}" (${realm} ${realmProgress ?? ''})`);
     return found;
   };
 
@@ -451,7 +451,7 @@ export function buildHuntQuests(): { quest: Quest; realm: Realm; rarity: Rarity 
         { kind: 'text', text: h.victoryText },
         ...itemRewards,
         { kind: 'money', amount: String(h.money) },
-        { kind: 'reputation', amount: '1', name: 'Observatory Estate', max: 'exalted' },
+        { kind: 'reputation', amount: '1', name: 'Azureline Sanctuary', max: 'exalted' },
       ],
       defeat: [
         { kind: 'text', text: h.defeatText },
@@ -475,9 +475,9 @@ export function buildHuntQuests(): { quest: Quest; realm: Realm; rarity: Rarity 
         steps: [
           {
             kind: 'event',
-            hint: `Hunt: ${h.display.replace('Hunt: ', '')} ({killed}/1)`,
+            hint: `Hunt: ${h.display.replace('Hunt: ', '')} ({kill}/1)`,
             event: {
-              location: 'Observatory Estate',
+              location: 'Azureline Sanctuary',
               steps: [
                 { kind: 'text', text: h.intro },
                 combatStep,
@@ -486,7 +486,7 @@ export function buildHuntQuests(): { quest: Quest; realm: Realm; rarity: Rarity 
           },
         ],
         rewards: [
-          { kind: 'reputation', amount: 1, name: 'Observatory Estate' },
+          { kind: 'reputation', amount: 1, name: 'Azureline Sanctuary' },
           { kind: 'money', amount: h.money },
         ],
       },

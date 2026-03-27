@@ -4,9 +4,8 @@ import observatoryBg   from '../../assets/locations/observatory-estate-bg.webp';
 import observatoryIcon from '../../assets/locations/observatory-estate-icon.webp';
 import roomIcon from '../../assets/locations/observatory-estate-room-bg.webp';
 import { observatoryEstateSeal } from '../items/transportSeals';
-import { buildSupplyQuests } from './observatoryEstateSupplyQuests';
-import { buildHuntQuests }   from './observatoryEstateHuntQuests';
-import { azuriteArchiveBuilding } from './observatoryEstateLibrary';
+import { buildSupplyQuests } from './azurelineSanctuarySupplyQuests';
+import { buildHuntQuests }   from './azurelineSanctuaryHuntQuests';
 
 // ─── Observatory Estate ───────────────────────────────────────────────────────
 // The hidden Azurite estate, revealed when the Celestial Keystone is used
@@ -22,8 +21,8 @@ import { azuriteArchiveBuilding } from './observatoryEstateLibrary';
 // Market and Request Board are always available — they represent the
 // estate's existing operational infrastructure, not things Linshu is rebuilding.
 
-const observatoryEstate: GameLocation = {
-  name: 'Observatory Estate',
+const azurelineSanctuary: GameLocation = {
+  name: 'Azureline Sanctuary',
   description:
     'A secluded estate revealed from a pocket dimension, nestled between the Falling Star ' +
     'Observatory and the Spirit Herb Garden. The formation arrays here are aligned with ' +
@@ -36,7 +35,7 @@ const observatoryEstate: GameLocation = {
   ambience: 'Space',
   position: { x: 1567, y: -630 },
   size: 'large',
-  reputationName: 'Observatory Estate',
+  reputationName: 'Azureline Sanctuary',
   explorationCountOverride: 999,
   unlocks: [],
   buildings: [
@@ -48,7 +47,7 @@ const observatoryEstate: GameLocation = {
       unlockCondition: 'tuTien_houseUnlocked == 1',
       condition: 'tuTien_houseUnlocked == 1',
       houseDef: {
-        name: 'Observatory Estate',
+        name: 'Ancestral Estate',
         description:
           'Your restored ancestral estate between the Falling Star Observatory and the ' +
           'Spirit Herb Garden. The aetheric arrays in the ceiling pulse with violet light. ' +
@@ -70,8 +69,34 @@ const observatoryEstate: GameLocation = {
 
 
     // ── Library — unlocked by Quest 4.3 ──────────────────────────────────────
-    // Books and categories defined in observatoryEstateLibrary.ts
-    azuriteArchiveBuilding,
+    // The Archive holds lore books about the Azurite Empire and the Lost Ages.
+    // Books can be added here later to expand worldbuilding.
+    {
+      kind: 'library',
+      condition: 'tuTien_libraryUnlocked == 1',
+      title: 'The Azurite Archive',
+      categories: [
+        {
+          name: 'The Lost Empire',
+          condition: '1',
+          books: [
+            {
+              title: 'The Last Sentinel\'s Record',
+              author: 'Aetheric Sentinel Unit 01',
+              condition: 'tuTien_sentinelDefeated == 1',
+              contents:
+                'Trial parameters: Royal Azurite Blood confirmed. Purity: 0.001%. ' +
+                'Assessment: Bloodline dispersal consistent with civilian survival lineage. ' +
+                'Combat proficiency: satisfactory. Archive access: granted. ' +
+                'Note for the Archivist: The Star-Eaters have been probing the outer seal ' +
+                'for the last eight hundred years. This unit\'s integrity will not hold indefinitely. ' +
+                'It is recommended that the new heir fortify the estate\'s outer formations before ' +
+                'the next probe cycle.',
+            },
+          ],
+        },
+      ],
+    },
 
     // ── Market — always available (pre-existing estate infrastructure) ────────
     {
@@ -112,8 +137,8 @@ const TIERS: { realm: Realm; tier: string }[] = [
 
 // ─── Registration ─────────────────────────────────────────────────────────────
 
-export function initializeObservatoryEstate(): void {
-  window.modAPI.actions.addLocation(observatoryEstate);
+export function initializeAzurelineSanctuary(): void {
+  window.modAPI.actions.addLocation(azurelineSanctuary);
 
   // ── Location links ─────────────────────────────────────────────────────────
   // CHANGED: The estate is no longer discovered by exploring from Falling Star
@@ -122,43 +147,43 @@ export function initializeObservatoryEstate(): void {
 
   // From Falling Star Observatory — visible once estate is unlocked
   window.modAPI.actions.linkLocations('Falling Star Observatory', {
-    location: observatoryEstate,
+    location: azurelineSanctuary,
     distance: 3,
     condition: 'tuTien_estateUnlocked == 1',
   });
 
   // Return links — always open once the estate exists
-  window.modAPI.actions.linkLocations('Observatory Estate', {
+  window.modAPI.actions.linkLocations('Azureline Sanctuary', {
     location: window.modAPI.gameData.locations['Falling Star Observatory'],
     distance: 2,
     condition: '1',
   });
   window.modAPI.actions.linkLocations('Spirit Herb Garden', {
-    location: observatoryEstate,
+    location: azurelineSanctuary,
     distance: 3,
     condition: 'tuTien_estateUnlocked == 1',
   });
-  window.modAPI.actions.linkLocations('Observatory Estate', {
+  window.modAPI.actions.linkLocations('Azureline Sanctuary', {
     location: window.modAPI.gameData.locations['Spirit Herb Garden'],
     distance: 2,
     condition: '1',
   });
   window.modAPI.actions.linkLocations('Xidian Outpost', {
-    location: observatoryEstate,
+    location: azurelineSanctuary,
     distance: 5,
     condition: 'tuTien_estateUnlocked == 1',
   });
-  window.modAPI.actions.linkLocations('Observatory Estate', {
+  window.modAPI.actions.linkLocations('Azureline Sanctuary', {
     location: window.modAPI.gameData.locations['Xidian Outpost'],
     distance: 1,
     condition: '1',
   });
   window.modAPI.actions.linkLocations('Jingdi Rise', {
-    location: observatoryEstate,
+    location: azurelineSanctuary,
     distance: 5,
     condition: 'tuTien_estateUnlocked == 1',
   });
-  window.modAPI.actions.linkLocations('Observatory Estate', {
+  window.modAPI.actions.linkLocations('Azureline Sanctuary', {
     location: window.modAPI.gameData.locations['Jingdi Rise'],
     distance: 3,
     condition: '1',
@@ -169,14 +194,14 @@ export function initializeObservatoryEstate(): void {
   const add = (name: string, stacks: number, realm: Realm, valueModifier = 1.0): void => {
     const item = window.modAPI.gameData.items[name];
     if (!item) { console.warn(`⚠️ Observatory market: item not found — "${name}"`); return; }
-    window.modAPI.actions.addItemToShop(item, stacks, 'Observatory Estate', realm, valueModifier);
+    window.modAPI.actions.addItemToShop(item, stacks, 'Azureline Sanctuary', realm, valueModifier);
   };
 
   add('Transport Seal (Nine Mountain Sect)',  5, 'qiCondensation');
   add('Transport Seal (Liang Tiao Village)',  5, 'qiCondensation');
   add('Transport Seal (Shen Henda City)',     5, 'qiCondensation');
   add('Transport Seal (Herb Garden Estate)', 5, 'qiCondensation');
-  add('Transport Seal (Observatory Estate)', 5, 'qiCondensation');
+  add('Transport Seal (Azureline Sanctuary)', 5, 'qiCondensation');
 
   add('Trueflame Orchid',  7,   'qiCondensation');
   add('Yinying Flare',     500, 'bodyForging');
@@ -197,11 +222,11 @@ export function initializeObservatoryEstate(): void {
 
   // ── Request board ──────────────────────────────────────────────────────────
   for (const { quest, realm, rarity } of buildSupplyQuests()) {
-    window.modAPI.actions.addQuestToRequestBoard(quest, realm, rarity, '1', 'Observatory Estate');
+    window.modAPI.actions.addQuestToRequestBoard(quest, realm, rarity, '1', 'Azureline Sanctuary');
   }
   for (const { quest, realm, rarity } of buildHuntQuests()) {
-    window.modAPI.actions.addQuestToRequestBoard(quest, realm, rarity, '1', 'Observatory Estate');
+    window.modAPI.actions.addQuestToRequestBoard(quest, realm, rarity, '1', 'Azureline Sanctuary');
   }
 
-  console.log('✅ Observatory Estate initialized with story-gated buildings.');
+  console.log('✅ Azureline Sanctuary initialized with story-gated buildings.');
 }

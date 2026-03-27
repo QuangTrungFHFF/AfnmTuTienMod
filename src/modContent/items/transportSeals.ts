@@ -15,17 +15,17 @@ export const herbGardenEstateSeal: TransportSealItem = {
   destination: 'Spirit Herb Garden',
 };
 
-// ─── Observatory Estate — Transport Seal ─────────────────────────────────────
-// Teleports the player to the Observatory Estate location.
+// ─── Azureline Sanctuary — Transport Seal ────────────────────────────────────
+// Teleports the player to the Azureline Sanctuary location.
 export const observatoryEstateSeal: TransportSealItem = {
   kind: 'transport_seal',
-  name: 'Transport Seal (Observatory Estate)',
-  description: 'A formation seal attuned to your estate near the Falling Star Observatory. Crush it to be instantly transported there.',
+  name: 'Transport Seal (Azureline Sanctuary)',
+  description: 'A formation seal attuned to your estate in Azureline Sanctuary. Crush it to be instantly transported there.',
   icon: seal03Icon,
   stacks: 3,
   rarity: 'empowered',
   realm: 'qiCondensation',
-  destination: 'Observatory Estate',
+  destination: 'Azureline Sanctuary',
 };
 
 // ─── Registration ─────────────────────────────────────────────────────────────
@@ -33,7 +33,4 @@ export const observatoryEstateSeal: TransportSealItem = {
 export function initializeTransportSeals(): void {
   window.modAPI.actions.addItem(herbGardenEstateSeal);
   window.modAPI.actions.addItem(observatoryEstateSeal);
-
-  // Both seals are craftable in the house Transport Array room —
-  // no shop listing needed. Players obtain them by building the room.
 }

@@ -4,7 +4,7 @@ import caretakerPortrait from '../../assets/characters/xiaomiao_p.webp';
 import caretakerImage from '../../assets/characters/xiaomiao_full.webp';
 
 // ─── Estate Caretaker ─────────────────────────────────────────────────────────
-// The caretaker manages the Observatory Estate, accepts supply deliveries,
+// The caretaker manages the Azureline Sanctuary, accepts supply deliveries,
 // and rewards the player with reputation and spirit stones.
 //
 // Portrait/image: replace the placeholder URLs below with actual game assets
@@ -17,7 +17,7 @@ export const estateCaretaker: Character = {
   allegiance: undefined, // neutral — accessible to all players
   bio:
     'A quiet, methodical cultivator who manages the day-to-day affairs of the ' +
-    'Observatory Estate. He oversees supply procurement and maintains order ' +
+    'Azureline Sanctuary. He oversees supply procurement and maintains order ' +
     'across the grounds.',
   condition: '1', // always visible  
   portrait: `${G}genericYoungGirlPortrait.webp`,
@@ -33,7 +33,7 @@ export const estateCaretaker: Character = {
         {
           kind: 'static',
           condition: '1',
-          location: 'Observatory Estate',
+          location: 'Azureline Sanctuary',
         },
       ],
       encounters: [],

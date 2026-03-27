@@ -2,13 +2,17 @@ import { TriggeredEvent } from 'afnm-types';
 
 // ─── Story Triggered Events ───────────────────────────────────────────────────
 // Three-event chain that carries the player from Nine Mountain Sect
-// through to unlocking the Observatory Estate.
+// through to unlocking the Azureline Sanctuary.
 //
 // Flow:
 //   1. beadDelivery   → gives Worn Glass Bead to new players
 //   2. aFeverInBlood  → bead shatters into Sigil (requires bodyForging + tutorials done)
 //   3. thirdSilence   → mercury wall at Ancestral Barrows, unlocks Crypt
-//   4. veilLifts      → Keystone used at Falling Star Observatory, estate unfolds
+//   4. sentinelEncounter → boss fight, Keystone reward
+//   5. veilLifts      → Keystone used at Falling Star Observatory, estate unfolds
+//
+// Dialog source: lore_dialog_v5_synchronized.txt
+// Location name: Observatory Estate → Azureline Sanctuary
 //
 // Trigger flag reference:
 //   luGianReturnToSectTutorial  — set by base game after Lu Gian crossroads event
@@ -21,7 +25,7 @@ import { TriggeredEvent } from 'afnm-types';
 // ─── 1. Bead Delivery ─────────────────────────────────────────────────────────
 // Fires once at Nine Mountain Sect as soon as the mod loads on any existing save.
 // Gives the player the starting heirloom so it's in their inventory.
-// Simple, no-drama delivery — the bead activates in a separate event.
+// The bead activates in a separate event (aFeverInBlood).
 const beadDelivery: TriggeredEvent = {
   name: 'tuTien_beadDelivery',
   trigger: 'tuTien_beadGiven == 0',
@@ -33,9 +37,11 @@ const beadDelivery: TriggeredEvent = {
       {
         kind: 'text',
         text:
-          'As you move through the sect grounds, you notice something in your pocket — ' +
-          'a dull glass bead, the only thing you managed to grab before the fire took your house. ' +
-          'You don\'t know why you still carry it.',
+          'As you move through the sect grounds, your chest still aches faintly from ' +
+          'where Tidao Feng\'s heavenly tribulation lightning pierced you. You reach into ' +
+          'your robes and feel something in your pocket, a dull glass bead. It was the only ' +
+          'thing you managed to grab before the beast destroyed your house. You don\'t know ' +
+          'why you still carry it, but it feels warm to the touch.',
       },
       {
         kind: 'addItem',
@@ -73,7 +79,7 @@ const aFeverInBlood: TriggeredEvent = {
         kind: 'text',
         text:
           'The air still carries the last traces of Tidao Feng\'s blossoms from the day she ' +
-          'found you. You have been cultivating for some time now — something in you is different. ' +
+          'found you. You have been cultivating for some time now.' +
           'And then the bead in your pocket begins to burn.',
       },
       {
@@ -88,7 +94,6 @@ const aFeverInBlood: TriggeredEvent = {
       },
       {
         kind: 'text',
-        // A metallic echo — not quite a voice, more like a resonance inside bone
         text:
           '(A faint, metallic echo reaches you — not from the air, but from your own blood.)\n\n' +
           '"The forge... is cold. ' +
@@ -148,17 +153,10 @@ const aFeverInBlood: TriggeredEvent = {
 };
 
 // ─── 3. The Third Silence ─────────────────────────────────────────────────────
-// Mercury wall, Crypt discovery, and Sentinel fight — all in one event.
-// Fires at Ancestral Barrows once. The actual combat uses "Automated Combatant"
-// (meridianOpening Late, hard) — a native game monster that fits the "ancient
-// construct" theme perfectly and avoids any hand-built EnemyEntity type errors.
+// Mercury wall, Crypt discovery. Fires at Ancestral Barrows once.
+// screens: ['map'] — Barrows shows "Explore" not "Enter", so has no location screen.
 const thirdSilence: TriggeredEvent = {
   name: 'tuTien_thirdSilence',
-  // Fires on the world map when the player visits Ancestral Barrows.
-  // screens: ['map'] is used because the Barrows shows "Explore" not "Enter",
-  // so it has no location screen — 'location' would never fire there.
-  // Condition simplified: beadActivated is sufficient, item flag lookup for
-  // talisman items can be unreliable depending on equipped vs inventory state.
   trigger:
     'tuTien_beadActivated == 1 && ' +
     'tuTien_cryptDiscovered == 0',
@@ -170,9 +168,9 @@ const thirdSilence: TriggeredEvent = {
       {
         kind: 'text',
         text:
-          'Between the Crypt of the Fist and the Crypt of the Blossom, ' +
-          'other cultivators walk past without a second glance. ' +
-          "But the Sigil on your belt is pulling toward a wall that — shouldn't move.",
+          'You stand between the Crypt of the Fist and the Crypt of the Blossom. ' +
+          'Other cultivators walk past without a second glance. ' +
+          'But the Sigil on your belt is pulling toward a wall that — shouldn\'t move.',
       },
       {
         kind: 'text',
@@ -210,12 +208,7 @@ const thirdSilence: TriggeredEvent = {
               },
               {
                 // Teleport directly into the Crypt — no map-hunting required.
-                // updatePlayerLocation: true is required or this only flashes
-                // the background and snaps back.
-                // The sentinelEncounter TriggeredEvent fires immediately on
-                // arrival because its trigger is now satisfied:
-                //   tuTien_cryptDiscovered == 1 && tuTien_sentinelDefeated == 0
-                //   screens: ['map'], locations: ['Crypt of the Aetheric Chart']
+                // updatePlayerLocation: true is required or this only flashes                
                 kind: 'location',
                 location: 'Crypt of the Aetheric Chart',
                 updatePlayerLocation: true,
@@ -223,7 +216,7 @@ const thirdSilence: TriggeredEvent = {
             ],
           },
           {
-            text: "Not yet. I'm not ready.",
+            text: 'Not yet. I\'m not ready.',
             children: [
               {
                 kind: 'text',
@@ -252,8 +245,7 @@ const thirdSilence: TriggeredEvent = {
 // ─── 4. Sentinel Encounter ────────────────────────────────────────────────────
 // Fires on the MAP at Crypt of the Aetheric Chart — exactly like thirdSilence
 // fires at Ancestral Barrows. The Crypt is an Explore-type location (no Enter
-// button / no location screen), so static NPCs never appear there. This
-// triggered event is the only reliable way to deliver the fight.
+// button / no location screen), so static NPCs never appear there.
 // Fires exactly once: condition becomes false after sentinelDefeated == 1.
 const sentinelEncounter: TriggeredEvent = {
   name: 'tuTien_sentinelEncounter',
@@ -312,6 +304,13 @@ const sentinelEncounter: TriggeredEvent = {
               'Inside, a prism of cold light hums with the rhythm of your own heartbeat.',
           },
           {
+            // Hint: guide player to use the Keystone at Falling Star Observatory.
+            kind: 'text',
+            text:
+              'The Keystone resonates with the high peaks near the Falling Star Observatory. ' +
+              'Seek the hidden fold in the mist.',
+          },
+          {
             kind: 'addItem',
             item: { name: 'Celestial Keystone' },
             amount: '1',
@@ -351,8 +350,7 @@ const sentinelEncounter: TriggeredEvent = {
 
 // ─── 5. The Veil Lifts ────────────────────────────────────────────────────────
 // The estate unfolds. Fires at Falling Star Observatory once the Keystone
-// is obtained. The Keystone is consumed — it IS the estate's anchor pin,
-// and using it here "grounds" the pocket dimension into the real world.
+// is obtained. The Keystone is consumed — it IS the estate's anchor pin.
 const veilLifts: TriggeredEvent = {
   name: 'tuTien_veilLifts',
   trigger:
@@ -374,16 +372,15 @@ const veilLifts: TriggeredEvent = {
       {
         kind: 'text',
         text:
-          'You hold the Keystone aloft. It doesn\'t so much activate as it remembers. ' +
-          'The thick mountain mists scream and part like torn silk. ' +
-          'Reality itself seems to peel back — revealing a hidden valley ' +
+          'As you hold the Keystone aloft, the thick mountain mists scream and part like torn silk. ' +
+          'Reality itself seems to peel back, revealing a hidden valley ' +
           'where the sky is a deep, eternal twilight.',
       },
       {
         kind: 'text',
         text:
-          'Before you lies the Observatory Estate. It is a skeleton of its former glory. ' +
-          'Pagodas lean at impossible angles. Once-magnificent bronze machinery lies ' +
+          'Before you lies the Azureline Sanctuary. It is a skeleton of its former glory. ' +
+          'pagodas lean at impossible angles, and once-magnificent bronze machinery lies ' +
           'rusted and choked by silver weeds. Two thousand years of sleep.',
       },
       // Keystone consumed — it has done its job
@@ -394,7 +391,7 @@ const veilLifts: TriggeredEvent = {
       },
       {
         kind: 'unlockLocation',
-        location: 'Observatory Estate',
+        location: 'Azureline Sanctuary',
       },
       {
         kind: 'flag',
@@ -424,31 +421,42 @@ const veilLifts: TriggeredEvent = {
         character: 'Linshu',
         text:
           '"Look at you... you\'ve finally returned to us. ' +
-          'I used to carry you through these gardens when you were no larger than a flower-bud, ' +
-          'before the sky fell and we had to hide you among the commoners to keep you safe."',
+          'I used to watch over you in these gardens when you were no larger than a flower-bud, ' +
+          'before everything changed, when the surviving elders hid you among the commoners to keep you safe"',
       },
       {
         kind: 'choice',
         choices: [
           {
-            text: '"Who are you? You talk as if you know me — I grew up on a dirt farm. I\'m nobody."',
+            text: '"Who are you? You talk as if we are family, but I\'m just a commoner from a poor village. I have no memories of this place or of you!"',
             children: [
               {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
-                  '"Lucky? Silly Little {Brother/Sister}." ' +
-                  '(She reaches out to brush a stray hair from your face. Her hand passes through you like cold wind.) ' +
-                  '"You think a mortal survives a direct lightning strike from a Fifth Elder because of \'luck\'?"',
+                  '"Lucky? Silly Little one. ' +
+                  'You think a mortal child survives a direct lightning strike from an Elder by chance alone?"',
               },
               {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
-                  '"That bolt was meant to purify the world, but your blood is Azurite — ' +
-                  'forged in the heart of falling stars. ' +
-                  'When Tidao Feng\'s Blossom Qi hit you, it was like a spark hitting a mountain of dry tinder. ' +
-                  'The lightning didn\'t save you. It sang to you. It recognised its Young {Master/Mistress}."',
+                  '"(her smile turns bittersweet, and she reaches out — her hand passes through ' +
+                  'your shoulder like cold mist) Memories can be buried by time or sealed by arts, ' +
+                  'Little {Brother/Sister}, but the blood never forgets. I have spent centuries ' +
+                  'drifting in the aether, watching your soul cycle through the mortal world like ' +
+                  'a flickering candle in a storm. I was beginning to fear the Azurite spark had ' +
+                  'gone out forever."',
+              },
+              {
+                kind: 'speech',
+                character: 'Linshu',
+                text:
+                  '"But then came that day at the farm. Tidao Feng\'s lightning strike was meant ' +
+                  'to be an end, but for you, it was a beginning. The lightning didn\'t save you ' +
+                  'out of mercy — it recognised the resonance of the Falling Stars in your veins. ' +
+                  'It was the anvil upon which your dormant lineage was reforged. You are the echo ' +
+                  'of an Empire, finally come home."',
               },
             ],
           },
@@ -460,9 +468,22 @@ const veilLifts: TriggeredEvent = {
                 character: 'Linshu',
                 text:
                   '"This is the Aetheric Chart House — the heart of our family\'s legacy. ' +
-                  'For two thousand years, we were the Star-Gazers, the ones who mapped the will of the Heavens. ' +
-                  'When the Empire fell, our last master folded this entire estate into a pocket of space ' +
-                  'to keep our secrets from the thieves and squatters who now call themselves \'Sects\'."',
+                  'For two thousand years, we were the Star-Gazers, the ones who mapped the will ' +
+                  'of the Heavens. When the Empire fell, our last master folded this entire estate ' +
+                  'into a pocket of space to keep our secrets from the thieves and squatters who ' +
+                  'now call themselves \'Sects\'."',
+              },
+              {
+                kind: 'speech',
+                character: 'Linshu',
+                text:
+                  '"(gestures to the rusted gears around you) It may look like a graveyard of ' +
+                  'rust to your eyes, Little {Brother/Sister}, but these machines are simply ' +
+                  'asleep, waiting for the one person whose blood can wake them. You think you ' +
+                  'are a commoner, yet the resonance in your heart says otherwise. That lightning ' +
+                  'strike from the Elder? It was the key that finally turned the lock in your soul. ' +
+                  'I have been watching the mists for so long, praying that the heir of the ' +
+                  'Star-Gazers would find the way back to her seat."',
               },
             ],
           },
@@ -472,28 +493,36 @@ const veilLifts: TriggeredEvent = {
         kind: 'speech',
         character: 'Linshu',
         text:
-          '"I am Linshu — the spirit of this Estate\'s Great Formation. ' +
-          'But a formation cannot last forever without a master to feed it. ' +
-          'I have spent every drop of my essence keeping this place hidden ' +
-          'while you were \'sleeping\' in the world of mortals."',
+          '"(her form flickers violently, turning grey for a moment) I am Linshu — ' +
+          'the spirit of this Estate\'s Great Formation. I was created to be the memory of our ' +
+          'house, and the guardian of its heir. But a formation is like a lamp, and I have been ' +
+          'burning the last of my oil for far too long."',
       },
       {
         kind: 'speech',
         character: 'Linshu',
         text:
-          '"Look at me, Little {Brother/Sister}... I am fading. My light is almost spent. ' +
-          'If I vanish, the formation collapses, and this entire valley — ' +
-          'along with the history of our people — will be crushed by the weight of the outside world. ' +
-          'You have the blood, but you lack the strength to anchor me yet. ' +
-          'Come to the estate. Talk to me there."',
+          '"(she looks down at her hands, which are turning transparent and grey) ' +
+          'Look at me, Little {Brother/Sister}... I am fading. I spent the last of my essence ' +
+          'to tear the veil and bring you here. My light is almost spent. If I vanish, this ' +
+          'pocket of reality will collapse, and our history will be erased forever."',
+      },
+      {
+        kind: 'speech',
+        character: 'Linshu',
+        text:
+          '"You\'ve finally reached the door, but you haven\'t taken the seat of the ' +
+          '{Master/Mistress} yet. Stay close to me. Breathe with the rhythm of the estate. ' +
+          'I need you to help me anchor this place back to the world before I become nothing ' +
+          'more than a whisper in the wind."',
       },
       { kind: 'clearCharacter' },
       // Move player to the estate — updatePlayerLocation: true is required
-      // to actually move the player (without it, this is only a temporary
-      // context change that flashes the estate background then snaps back).
+      // to actually move the player (without it, this only temporarily changes
+      // the context and then snaps back).
       {
         kind: 'location',
-        location: 'Observatory Estate',
+        location: 'Azureline Sanctuary',
         updatePlayerLocation: true,
       },
     ],
@@ -501,8 +530,6 @@ const veilLifts: TriggeredEvent = {
 };
 
 // ─── DEBUG: Skip to estate (comment out for release) ─────────────────────────
-// Uncomment this and add it to the registration below to jump straight to
-// the estate being unlocked for fast iteration testing.
 /*
 const debugSkip: TriggeredEvent = {
   name: 'tuTien_debugSkip',
@@ -517,7 +544,7 @@ const debugSkip: TriggeredEvent = {
       { kind: 'flag', global: true, flag: 'tuTien_sentinelDefeated',value: '1' },
       { kind: 'flag', global: true, flag: 'tuTien_keystoneObtained',value: '1' },
       { kind: 'flag', global: true, flag: 'tuTien_estateUnlocked',  value: '1' },
-      { kind: 'unlockLocation', location: 'Observatory Estate' },
+      { kind: 'unlockLocation', location: 'Azureline Sanctuary' },
       { kind: 'flag', global: true, flag: 'tuTien_debugSkipDone',   value: '1' },
     ],
   },
