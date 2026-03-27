@@ -10,11 +10,11 @@ import caretakerImage from '../../assets/characters/xiaomiao_full.webp';
 //
 // Dialog source: lore_dialog_v5_synchronized.txt (all [CODE X] stages aligned)
 //
-// Visibility: Only after the estate is unlocked (tuTien_estateUnlocked == 1)
+// Visibility: Only after the estate is unlocked (tuTien_sanctuaryUnlocked == 1)
 // Location:   Azureline Sanctuary (static)
 //
 // Flag reference:
-//   tuTien_estateUnlocked    — estate revealed via Keystone event
+//   tuTien_sanctuaryUnlocked    — estate revealed via Keystone event
 //   tuTien_q3_1_given        — Chain 3.1 quest (1=given, 2=delivered)
 //   tuTien_q3_2_given        — Chain 3.2 quest (1=given, 2=delivered)
 //   tuTien_q3_3_given        — Chain 3.3 quest (1=given, 2=delivered)
@@ -43,7 +43,7 @@ export const linshu: Character = {
     'The spirit of the Azureline Sanctuary, a consciousness bound to this place ' +
     'since the fall of the Azurite Empire. She calls herself your Senior Sister. ' +
     'She has been waiting two thousand years for a Young Master or Mistress to return.',
-  condition: 'tuTien_estateUnlocked == 1',
+  condition: 'tuTien_sanctuaryUnlocked == 1',
   // TODO: Replace portrait and image with proper Linshu artwork.
   // She should appear semi-transparent/spectral in chain 3 and early chain 4,
   // and fully solid after quest 4.2 completes (tuTien_q4_2_given >= 2).
@@ -60,7 +60,7 @@ export const linshu: Character = {
       locations: [
         {
           kind: 'static',
-          condition: 'tuTien_estateUnlocked == 1',
+          condition: 'tuTien_sanctuaryUnlocked == 1',
           location: 'Azureline Sanctuary',
         },
       ],
@@ -78,7 +78,7 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"The estate is quiet today, Little {Brother/Sister}. The spiritual ' +
+                '"The sanctuary is quiet today, Little {Brother/Sister}. The spiritual ' +
                 'energy is flowing perfectly. Is there something you needed?"',
             },
             {
@@ -121,40 +121,53 @@ export const linshu: Character = {
 
         // ── STAGE 3.0: First talk after estate unlock, chain 3 not started ───
         {
-          condition: 'tuTien_estateUnlocked == 1 && tuTien_q3_1_given == 0',
-          notifyCondition: 'tuTien_estateUnlocked == 1 && tuTien_q3_1_given == 0',
+          condition: 'tuTien_sanctuaryUnlocked == 1 && tuTien_q3_1_given == 0',
+          notifyCondition: 'tuTien_sanctuaryUnlocked == 1 && tuTien_q3_1_given == 0',
           event: [
             { kind: 'setCharacter', character: CHAR },
+            {
+              kind: 'text',
+              text:
+                'The sanctuary grows quiet. The light around Linshu dims, her form faltering ' +
+                'as the flow of the Great Formation stutters unevenly.',
+            },
             {
               kind: 'speech',
               character: CHAR,
               text:
                 '"Silly Little {Brother/Sister}... don\'t look so scared. I\'m just a ' +
-                'little... out of breath. It turns out holding an entire estate in a fold of ' +
-                'space for two thousand years is quite tiring for a Spirit. To anchor my form ' +
-                'back to reality, I need a catalyst."',
+                'little... out of breath. It turns out holding an entire sanctuary in a fold of ' +
+                'space for two thousand years is quite tiring for a Spirit."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text: '"If I am to anchor my form back to reality, I will need a catalyst."',
             },
             {
               kind: 'speech',
               character: CHAR,
               text:
                 '"Bring me some Regeneration Pills. They carry enough refined life-force ' +
-                'to act as a temporary anchor for my spirit. Please... I\'ve waited so long to ' +
-                'see you again. Don\'t let me disappear now."',
+                'to act as a temporary anchor for my spirit."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text: '"(softer) Please… I have waited a long time to see you again. Don\'t let me fade now."',
             },
             {
               kind: 'choice',
               choices: [
                 {
-                  text: '"I will get you those pills. Don\'t fade."',
+                  text: '"I will get you those pills. Hold on."',
                   children: [
                     {
                       kind: 'speech',
                       character: CHAR,
                       text:
-                        '"Five Regeneration Pills should be enough. Just make sure they are ' +
-                        'properly refined... diluted medicine won\'t have the spiritual weight I ' +
-                        'need to anchor myself. Please hurry, Little {Brother/Sister}."',
+                        '"Five Regeneration Pills should be enough. With your current cultivation, ' +
+                        'Regeneration Pills are the most reliable choice. Please… hurry, Little {playerName}."',
                     },
                     { kind: 'quest', quest: 'tuTien_q3_1_recovery' },
                     { kind: 'flag', global: true, flag: 'tuTien_q3_1_given', value: '1' },
@@ -167,12 +180,10 @@ export const linshu: Character = {
                       kind: 'speech',
                       character: CHAR,
                       text:
-                        '"(smiles weakly) It will be enough to stop the wind from blowing me ' +
-                        'through the walls. The medicinal Qi will simulate a physical vessel for ' +
-                        'my spirit. We can worry about permanent solutions later. Just please... ' +
-                        'come back safely."',
+                        '"(smiles weakly) It will be enough to keep me from drifting apart. ' +
+                        'The medicinal Qi will act as a temporary vessel for my spirit. ' +
+                        'We can worry about something more permanent later. For now… just return safely."',
                     },
-                    // Quest not given on this branch — player must return and pick [I].
                   ],
                 },
               ],
@@ -192,9 +203,9 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"(her voice sounds slightly muffled, as if coming from far away) ' +
-                'Five Regeneration Pills, Tier II. I\'m still here, Little {Brother/Sister}, ' +
-                'but the edges of my vision are getting blurry. Please hurry."',
+                '"(her voice faint, as though carried from afar) Five Regeneration Pills… ' +
+                'I\'m still holding on, but my form is beginning to lose its clarity. ' +
+                'Please… do not take too long."',
             },
           ],
         },
@@ -236,14 +247,14 @@ export const linshu: Character = {
               character: CHAR,
               text:
                 '"Ah... much better. My feet actually feel the grass again. Thank you, ' +
-                'Little {Brother/Sister}. You\'re already more reliable than the old masters. ' +
+                'Little {playerName}. You\'re already more reliable than the old masters. ' +
                 'Look at this garden — it\'s a mess of silver-weeds and dead Qi. Now that I can ' +
                 'touch the world again, let me clear the overgrowth. I\'ll make this a place ' +
                 'where your spirit-herbs can finally breathe."',
             },
             {
               kind: 'text',
-              text: 'Estate Herb Field unlocked. You can now grow spirit herbs here.',
+              text: 'Sanctuary Herb Field unlocked. You can now grow spirit herbs here.',
             },
             { kind: 'flag', global: true, flag: 'tuTien_herbUnlocked', value: '1' },
             { kind: 'flag', global: true, flag: 'tuTien_q3_1_given', value: '2' },
@@ -258,18 +269,29 @@ export const linshu: Character = {
           event: [
             { kind: 'setCharacter', character: CHAR },
             {
+              kind: 'text',
+              text:
+                'The haze that once clouded the garden begins to recede. Faint light returns ' +
+                'to the pathways, and the surrounding structures sharpen into focus, as though ' +
+                'the sanctuary itself is slowly waking.',
+            },
+            {
               kind: 'speech',
               character: CHAR,
-              text: '"Good — you can see the garden is already clearing."',
+              text: '"Good… you can see it, can\'t you? The garden is beginning to clear."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text: '"But the sanctuary is still blind. Its guardian spirit slumbers, and the watching array has gone dark."',
             },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"The estate has lost its sight, its guardian spirit slumbers, ' +
-                'and the watching array has gone dark. Those Xing Kuilei beasts near ' +
-                'the Falling Star Observatory carry shards of Living Meteor in their bodies. ' +
-                'Bring me three shards, and I will hammer them into the roof-tiles myself."',
+                '"Those Xing Kuilei beasts near the Falling Star Observatory carry shards of ' +
+                'Living Meteor within their bodies. Bring me three shards, and I will set them ' +
+                'into the roof-tiles myself."',
             },
             {
               kind: 'choice',
@@ -323,7 +345,7 @@ export const linshu: Character = {
               kind: 'text',
               text:
                 'Linshu takes the meteor shards and floats upward, pressing each one ' +
-                'into the cracked tiles of the estate\'s domed ceiling. They fuse with a sound ' +
+                'into the cracked tiles of the sanctuary\'s domed ceiling. They fuse with a sound ' +
                 'like ringing brass. The roof glows pulsing violet.',
             },
             {
@@ -331,8 +353,8 @@ export const linshu: Character = {
               character: CHAR,
               text:
                 '"There. Can you feel that? The house is starting to recognise its master. ' +
-                'You should stay here, Little {Brother/Sister}. A Young {Master/Mistress} ' +
-                'shouldn\'t be sleeping in a commoner\'s hut at the Sect."',
+                'You should stay here. A Young {Master/Mistress} shouldn\'t be sleeping in ' +
+                'a commoner\'s hut at the Sect."',
             },
             {
               kind: 'text',
@@ -351,15 +373,22 @@ export const linshu: Character = {
           event: [
             { kind: 'setCharacter', character: CHAR },
             {
+              kind: 'text',
+              text:
+                'A faint tremor runs through the sanctuary. Dust slips from the eaves, and ' +
+                'the distant structures hum unevenly, as though the entire domain is drifting ' +
+                'without anchor.',
+            },
+            {
               kind: 'speech',
               character: CHAR,
-              text: '"I hope the house is comfortable. But we\'re not done yet —"',
+              text: '"I hope the house is comfortable... but we\'re not done yet."',
             },
             {
               kind: 'speech',
               character: CHAR,
               text:
-                '"The estate is hovering just above the mortal realm, yet it has no roots. ' +
+                '"The sanctuary is hovering just above the mortal realm, yet it has no roots. ' +
                 'If we embed enough Resonating Silver into its lower foundations, we can anchor it ' +
                 'to the same earth-veins that run through the Yinglin Mine near your Sect. ' +
                 'Bring me ten pieces, and I will carve a path straight into the mountain\'s heart."',
@@ -373,7 +402,7 @@ export const linshu: Character = {
                     {
                       kind: 'speech',
                       character: CHAR,
-                      text: '"Ten pieces. Don\'t settle for dull ore."',
+                      text: '"Ten pieces should be enough."',
                     },
                     { kind: 'quest', quest: 'tuTien_q3_3_tuneEarth' },
                     { kind: 'flag', global: true, flag: 'tuTien_q3_3_given', value: '1' },
@@ -413,7 +442,7 @@ export const linshu: Character = {
             {
               kind: 'text',
               text:
-                'Linshu guides the silver into the estate\'s lower chamber with a gesture. ' +
+                'Linshu guides the silver into the sanctuary\'s lower chamber with a gesture. ' +
                 'A low, resonant hum builds from below, deep and rhythmic, like a second heartbeat.',
             },
             {
@@ -536,7 +565,7 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"You\'ve done well, Little {Brother/Sister}. The estate breathes again, ' +
+                '"You\'ve done well, Little {Brother/Sister}. The sanctuary breathes again, ' +
                 'and your foundation is stable. Rest now. Focus on your cultivation. Once you ' +
                 'reach the Qi Condensation, we will speak of rebuilding the family\'s true power. ' +
                 'I will be right here waiting."',
@@ -806,7 +835,7 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Now that I have my strength back, the silence of this estate is starting ' +
+                '"Now that I have my strength back, the silence of this sanctuary is starting ' +
                 'to bother me. Our family were Scribes. We recorded the secrets of the universe. ' +
                 'But look at our shelves — empty. Dust and shadows."',
             },
@@ -913,7 +942,7 @@ export const linshu: Character = {
             },
             {
               kind: 'text',
-              text: 'Estate Library unlocked. Ancient records are now accessible within the estate.',
+              text: 'Sanctuary Library unlocked. Ancient records are now accessible within the Sanctuary.',
             },
             { kind: 'flag', global: true, flag: 'tuTien_libraryUnlocked', value: '1' },
             { kind: 'flag', global: true, flag: 'tuTien_q4_3_given', value: '2' },
@@ -934,11 +963,19 @@ export const linshu: Character = {
             {
               kind: 'speech',
               character: CHAR,
+              text: '"There is someone I once knew… a figure from the Empire\'s past."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
+              text: '"Her name was Danxi. An alchemist unlike any other."',
+            },
+            {
+              kind: 'speech',
+              character: CHAR,
               text:
-                '"I\'m starting to remember her, Little Danxi. My best friend - the ' +
-                'Empire\'s Chief Alchemist. I think there might be a way to find her, but the ' +
-                'method requires a steady, experienced alchemist\'s hand. Your crafting skill ' +
-                'isn\'t quite there yet. Study the flames, practice your art, and come back to me."',
+                '"After she left, her presence faded from my perception. ' +
+                'I do not know what became of her."',
             },
           ],
         },
@@ -969,7 +1006,7 @@ export const linshu: Character = {
               kind: 'speech',
               character: CHAR,
               text:
-                '"Back then, I could no longer sense her after she left the estate… only ' +
+                '"Back then, I could no longer sense her after she left the sanctuary… only ' +
                 'that she never returned. I assumed she had met with misfortune."',
             },
             {

@@ -17,7 +17,7 @@ export const herbGardenEstateSeal: TransportSealItem = {
 
 // ─── Azureline Sanctuary — Transport Seal ────────────────────────────────────
 // Teleports the player to the Azureline Sanctuary location.
-export const observatoryEstateSeal: TransportSealItem = {
+export const azurelineSanctuarySeal: TransportSealItem = {
   kind: 'transport_seal',
   name: 'Transport Seal (Azureline Sanctuary)',
   description: 'A formation seal attuned to your estate in Azureline Sanctuary. Crush it to be instantly transported there.',
@@ -32,5 +32,5 @@ export const observatoryEstateSeal: TransportSealItem = {
 // Must be called before locations are initialized, since houseDef references these items.
 export function initializeTransportSeals(): void {
   window.modAPI.actions.addItem(herbGardenEstateSeal);
-  window.modAPI.actions.addItem(observatoryEstateSeal);
+  window.modAPI.actions.addItem(azurelineSanctuarySeal);
 }

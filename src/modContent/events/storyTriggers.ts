@@ -20,7 +20,7 @@ import { TriggeredEvent } from 'afnm-types';
 //   tuTien_beadActivated        — bead shattered, Sigil obtained
 //   tuTien_cryptDiscovered      — Crypt unlocked at Ancestral Barrows
 //   tuTien_keystoneObtained     — Sentinel defeated, Keystone in inventory
-//   tuTien_estateUnlocked       — estate revealed, first Linshu meeting done
+//   tuTien_sanctuaryUnlocked       — estate revealed, first Linshu meeting done
 
 // ─── 1. Bead Delivery ─────────────────────────────────────────────────────────
 // Fires once at Nine Mountain Sect as soon as the mod loads on any existing save.
@@ -288,6 +288,13 @@ const sentinelEncounter: TriggeredEvent = {
         enemies: [window.modAPI.gameData.monsters.find(m => m.name === 'Automated Combatant')!],
         victory: [
           {
+            kind: 'text',
+            text:
+              'The construct collapses inward, ancient gears spilling across the stone floor. ' +
+              'A compartment in its chest slides open. ' +
+              'Inside, a prism of cold light hums with the rhythm of your own heartbeat.',
+          },
+          {
             kind: 'speech',
             character: 'Aetheric Sentinel',
             text:
@@ -295,13 +302,6 @@ const sentinelEncounter: TriggeredEvent = {
               'Combat parameters: exceeded. ' +
               'The Keystone is yours. ' +
               'Do not... let the Star-Eaters find it again."',
-          },
-          {
-            kind: 'text',
-            text:
-              'The construct collapses inward, ancient gears spilling across the stone floor. ' +
-              'A compartment in its chest slides open. ' +
-              'Inside, a prism of cold light hums with the rhythm of your own heartbeat.',
           },
           {
             // Hint: guide player to use the Keystone at Falling Star Observatory.
@@ -355,7 +355,7 @@ const veilLifts: TriggeredEvent = {
   name: 'tuTien_veilLifts',
   trigger:
     'tuTien_keystoneObtained == 1 && ' +
-    'tuTien_estateUnlocked == 0 && ' +
+    'tuTien_sanctuaryUnlocked == 0 && ' +
     'Celestial_Keystone >= 1',
   screens: ['location'],
   locations: ['Falling Star Observatory'],
@@ -379,8 +379,8 @@ const veilLifts: TriggeredEvent = {
       {
         kind: 'text',
         text:
-          'Before you lies the Azureline Sanctuary. It is a skeleton of its former glory. ' +
-          'pagodas lean at impossible angles, and once-magnificent bronze machinery lies ' +
+          'Before you lies the Azureline Sanctuary. It is a skeleton of its former glory — ' +
+          'Pagodas lean at impossible angles, and once-magnificent bronze machinery lies ' +
           'rusted and choked by silver weeds. Two thousand years of sleep.',
       },
       // Keystone consumed — it has done its job
@@ -396,7 +396,7 @@ const veilLifts: TriggeredEvent = {
       {
         kind: 'flag',
         global: true,
-        flag: 'tuTien_estateUnlocked',
+        flag: 'tuTien_sanctuaryUnlocked',
         value: '1',
       },
       // Force Linshu's character placement to re-evaluate now that the flag is set.
@@ -422,7 +422,7 @@ const veilLifts: TriggeredEvent = {
         text:
           '"Look at you... you\'ve finally returned to us. ' +
           'I used to watch over you in these gardens when you were no larger than a flower-bud, ' +
-          'before everything changed, when the surviving elders hid you among the commoners to keep you safe"',
+          'before the sky fell and the surviving elders hid you among the commoners to keep you safe."',
       },
       {
         kind: 'choice',
@@ -434,29 +434,33 @@ const veilLifts: TriggeredEvent = {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
-                  '"Lucky? Silly Little one. ' +
-                  'You think a mortal child survives a direct lightning strike from an Elder by chance alone?"',
+                  '"(a faint, fragile laugh, reaching out to brush a stray hair from your face — ' +
+                  'her hand passes through like a breath of cold air) ' +
+                  'Silly Little one… do you think a mortal child survives a direct lightning strike ' +
+                  'from an Elder by chance alone?"',
               },
               {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
-                  '"(her smile turns bittersweet, and she reaches out — her hand passes through ' +
-                  'your shoulder like cold mist) Memories can be buried by time or sealed by arts, ' +
-                  'Little {Brother/Sister}, but the blood never forgets. I have spent centuries ' +
-                  'drifting in the aether, watching your soul cycle through the mortal world like ' +
-                  'a flickering candle in a storm. I was beginning to fear the Azurite spark had ' +
-                  'gone out forever."',
+                  '"(her smile turns bittersweet, her hand drifting through your shoulder like cold mist) ' +
+                  'Memories can be buried by time or sealed by art, Little {Brother/Sister}, but the ' +
+                  'blood never forgets. I have spent centuries drifting in the aether, watching over ' +
+                  'what remained of you, afraid that the Azurite spark had faded beyond recall."',
               },
               {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
-                  '"But then came that day at the farm. Tidao Feng\'s lightning strike was meant ' +
-                  'to be an end, but for you, it was a beginning. The lightning didn\'t save you ' +
-                  'out of mercy — it recognised the resonance of the Falling Stars in your veins. ' +
-                  'It was the anvil upon which your dormant lineage was reforged. You are the echo ' +
-                  'of an Empire, finally come home."',
+                  '"But then came that day at the farm. Tidao Feng\'s lightning strike was meant to ' +
+                  'end a life — but for you, it became a beginning. It did not spare you out of mercy — ' +
+                  'it answered the resonance of the Falling Stars in your veins. It was the anvil upon ' +
+                  'which your dormant lineage was reforged."',
+              },
+              {
+                kind: 'speech',
+                character: 'Linshu',
+                text: '"(softly) You are what remains… finally returned home."',
               },
             ],
           },
@@ -469,21 +473,17 @@ const veilLifts: TriggeredEvent = {
                 text:
                   '"This is the Aetheric Chart House — the heart of our family\'s legacy. ' +
                   'For two thousand years, we were the Star-Gazers, the ones who mapped the will ' +
-                  'of the Heavens. When the Empire fell, our last master folded this entire estate ' +
-                  'into a pocket of space to keep our secrets from the thieves and squatters who ' +
-                  'now call themselves \'Sects\'."',
+                  'of the Heavens. When the Empire fell, our last master folded this entire sanctuary ' +
+                  'into a pocket of space to keep our secrets from those who would claim them without understanding."',
               },
               {
                 kind: 'speech',
                 character: 'Linshu',
                 text:
                   '"(gestures to the rusted gears around you) It may look like a graveyard of ' +
-                  'rust to your eyes, Little {Brother/Sister}, but these machines are simply ' +
-                  'asleep, waiting for the one person whose blood can wake them. You think you ' +
-                  'are a commoner, yet the resonance in your heart says otherwise. That lightning ' +
-                  'strike from the Elder? It was the key that finally turned the lock in your soul. ' +
-                  'I have been watching the mists for so long, praying that the heir of the ' +
-                  'Star-Gazers would find the way back to her seat."',
+                  'rust to your eyes, Little {Brother/Sister}, but these mechanisms are merely ' +
+                  'dormant, waiting for the one whose blood can stir them again. You believe ' +
+                  'yourself a commoner, yet the resonance in your heart says otherwise."',
               },
             ],
           },
@@ -494,27 +494,32 @@ const veilLifts: TriggeredEvent = {
         character: 'Linshu',
         text:
           '"(her form flickers violently, turning grey for a moment) I am Linshu — ' +
-          'the spirit of this Estate\'s Great Formation. I was created to be the memory of our ' +
-          'house, and the guardian of its heir. But a formation is like a lamp, and I have been ' +
-          'burning the last of my oil for far too long."',
+          'the spirit of this Azureline Sanctuary\'s Great Formation. I was created to preserve ' +
+          'the memory of our house, and to guard the one who would return."',
       },
       {
         kind: 'speech',
         character: 'Linshu',
         text:
           '"(she looks down at her hands, which are turning transparent and grey) ' +
-          'Look at me, Little {Brother/Sister}... I am fading. I spent the last of my essence ' +
-          'to tear the veil and bring you here. My light is almost spent. If I vanish, this ' +
-          'pocket of reality will collapse, and our history will be erased forever."',
+          'Look at me, Little one... I am fading. I spent the last of my essence ' +
+          'to tear the veil and bring you here. My light is nearly gone. If I vanish, ' +
+          'this sanctuary will collapse, and all that remains of us will be lost with it."',
       },
       {
         kind: 'speech',
         character: 'Linshu',
         text:
-          '"You\'ve finally reached the door, but you haven\'t taken the seat of the ' +
-          '{Master/Mistress} yet. Stay close to me. Breathe with the rhythm of the estate. ' +
-          'I need you to help me anchor this place back to the world before I become nothing ' +
-          'more than a whisper in the wind."',
+          '"You\'ve finally reached the door, but you have not yet taken your place as ' +
+          '{Master/Mistress}. Stay close to me. Steady your breath… and let it align with ' +
+          'the flow of this place."',
+      },
+      {
+        kind: 'speech',
+        character: 'Linshu',
+        text:
+          '"I need you to help me anchor this sanctuary to the world… before I become ' +
+          'nothing more than a whisper in the wind."',
       },
       { kind: 'clearCharacter' },
       // Move player to the estate — updatePlayerLocation: true is required
@@ -543,7 +548,7 @@ const debugSkip: TriggeredEvent = {
       { kind: 'flag', global: true, flag: 'tuTien_cryptDiscovered', value: '1' },
       { kind: 'flag', global: true, flag: 'tuTien_sentinelDefeated',value: '1' },
       { kind: 'flag', global: true, flag: 'tuTien_keystoneObtained',value: '1' },
-      { kind: 'flag', global: true, flag: 'tuTien_estateUnlocked',  value: '1' },
+      { kind: 'flag', global: true, flag: 'tuTien_sanctuaryUnlocked',  value: '1' },
       { kind: 'unlockLocation', location: 'Azureline Sanctuary' },
       { kind: 'flag', global: true, flag: 'tuTien_debugSkipDone',   value: '1' },
     ],

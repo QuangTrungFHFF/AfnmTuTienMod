@@ -1,6 +1,6 @@
 import { G } from '../constants';
 import { craftingTechniqueNames } from '../techniques/crafting';
-import { herbGardenEstateSeal, observatoryEstateSeal } from './transportSeals';
+import { herbGardenEstateSeal, azurelineSanctuarySeal } from './transportSeals';
 
 // ─── Crafting Technique Action Items ─────────────────────────────────────────
 // These items teach the player a crafting technique when acquired.
@@ -66,5 +66,5 @@ export function initializeItems(): void {
 
   // Transport seals available at Nine Mountain Sect shop (replenishable supply)
   window.modAPI.actions.addItemToShop(herbGardenEstateSeal,   3, 'Liang Tiao Village', 'qiCondensation', 1.5);
-  window.modAPI.actions.addItemToShop(observatoryEstateSeal,  3, 'Liang Tiao Village', 'qiCondensation', 1.5);
+  window.modAPI.actions.addItemToShop(azurelineSanctuarySeal,  3, 'Liang Tiao Village', 'qiCondensation', 1.5);
 }

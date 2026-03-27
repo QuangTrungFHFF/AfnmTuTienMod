@@ -3,7 +3,7 @@ import { G } from '../constants';
 import observatoryBg   from '../../assets/locations/observatory-estate-bg.webp';
 import observatoryIcon from '../../assets/locations/observatory-estate-icon.webp';
 import roomIcon from '../../assets/locations/observatory-estate-room-bg.webp';
-import { observatoryEstateSeal } from '../items/transportSeals';
+import { azurelineSanctuarySeal } from '../items/transportSeals';
 import { buildSupplyQuests } from './azurelineSanctuarySupplyQuests';
 import { buildHuntQuests }   from './azurelineSanctuaryHuntQuests';
 
@@ -27,7 +27,7 @@ const azurelineSanctuary: GameLocation = {
     'A secluded estate revealed from a pocket dimension, nestled between the Falling Star ' +
     'Observatory and the Spirit Herb Garden. The formation arrays here are aligned with ' +
     'the stars, granting unusually clear perception of qi flows. ' +
-    'It bears the marks of the Azurite Empire — two thousand years of patient waiting.',
+    'It bears the marks of the Azurite Empire. Two thousand years of patient waiting.',
   image: observatoryBg,
   icon: observatoryIcon,
   screenEffect: 'driftingLeaves',
@@ -57,7 +57,7 @@ const azurelineSanctuary: GameLocation = {
         qiDensity: 4000,
         fixedRooms: [],
         freeRooms: '4',
-        transportSeal: observatoryEstateSeal,
+        transportSeal: azurelineSanctuarySeal,
       },
     },
 
@@ -149,7 +149,7 @@ export function initializeAzurelineSanctuary(): void {
   window.modAPI.actions.linkLocations('Falling Star Observatory', {
     location: azurelineSanctuary,
     distance: 3,
-    condition: 'tuTien_estateUnlocked == 1',
+    condition: 'tuTien_sanctuaryUnlocked == 1',
   });
 
   // Return links — always open once the estate exists
@@ -161,7 +161,7 @@ export function initializeAzurelineSanctuary(): void {
   window.modAPI.actions.linkLocations('Spirit Herb Garden', {
     location: azurelineSanctuary,
     distance: 3,
-    condition: 'tuTien_estateUnlocked == 1',
+    condition: 'tuTien_sanctuaryUnlocked == 1',
   });
   window.modAPI.actions.linkLocations('Azureline Sanctuary', {
     location: window.modAPI.gameData.locations['Spirit Herb Garden'],
@@ -171,7 +171,7 @@ export function initializeAzurelineSanctuary(): void {
   window.modAPI.actions.linkLocations('Xidian Outpost', {
     location: azurelineSanctuary,
     distance: 5,
-    condition: 'tuTien_estateUnlocked == 1',
+    condition: 'tuTien_sanctuaryUnlocked == 1',
   });
   window.modAPI.actions.linkLocations('Azureline Sanctuary', {
     location: window.modAPI.gameData.locations['Xidian Outpost'],
@@ -181,7 +181,7 @@ export function initializeAzurelineSanctuary(): void {
   window.modAPI.actions.linkLocations('Jingdi Rise', {
     location: azurelineSanctuary,
     distance: 5,
-    condition: 'tuTien_estateUnlocked == 1',
+    condition: 'tuTien_sanctuaryUnlocked == 1',
   });
   window.modAPI.actions.linkLocations('Azureline Sanctuary', {
     location: window.modAPI.gameData.locations['Jingdi Rise'],
